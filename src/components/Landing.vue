@@ -1,15 +1,15 @@
 <template>
-  <main class="h-screen w-screen flex items-center justify-center">
+  <main class="h-screen w-screen flex items-center justify-center px-3">
     <div class="flex flex-col gap-8 w-md">
-      <div class="flex flex-col gap-3">
+      <div class="grid grid-cols-2 gap-2">
         <button
           v-for="option of difficultyOptions"
           :key="option.to"
-          :class="`text-white rounded-lg flex items-center gap-2 justify-center px-3 py-2 w-full text-center cursor-pointer bg-black hover:text-${option.color}-400 transition-colors`"
+          :class="`text-white rounded-xl flex items-center gap-2 justify-center px-3 py-2 w-full h-48 text-center cursor-pointer bg-black hover:text-${option.color}-400 transition-colors`"
           @click="() => onPlay(option.to)"
         >
-          {{ `Play Random ${option.name} Sudoku` }}
-          <PlayIcon :class="`size-5 text-${option.color}-400`"/>
+          {{ option.name }}
+          <PlayIcon :class="`size-5 text-${option.color}-400`" />
         </button>
       </div>
       <div class="flex gap-3 items-center justify-between">

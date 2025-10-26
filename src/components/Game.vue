@@ -1,7 +1,7 @@
 <template>
-  <main class="h-screen w-screen flex items-center justify-center gap-8">
+  <main class="h-screen w-screen flex items-center justify-center gap-8 px-2">
     <div class="space-y-2">
-      <div class="text-gray-900 font-medium flex gap-4 min-h-6 w-full justify-between items-center">
+      <div class="text-gray-900 font-medium flex md:gap-4 min-h-6 w-full justify-between items-center">
         <IconButton class="pl-0" @click="router.push(`/${difficulty}`)"
           ><ChevronLeftIcon class="size-5" />Back</IconButton
         >

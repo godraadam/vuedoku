@@ -20,7 +20,7 @@ function useState() {
         : "easy") as Difficulty,
   );
 
-  const autoCandidates = ref(true);
+  const autoCandidates = ref(false);
   const autoHint = ref(false);
   const running = ref(true);
   const { time, reset: resetTimer } = useTimer(running);
