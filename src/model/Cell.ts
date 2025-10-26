@@ -74,11 +74,11 @@ export default class Cell {
   }
 
   public hasCandidate(value: number) {
-    return this.getCandidate(value).getState();
+    return this.getCandidate(value).isSet();
   }
 
   public getCandidateCount() {
-    return this.getCandidates().reduce((count, c) => (c.getState() ? count + 1 : count), 0);
+    return this.getCandidates().reduce((count, c) => (c.isSet() ? count + 1 : count), 0);
   }
 
   public isFilled() {
@@ -97,7 +97,7 @@ export default class Cell {
 
   public getCandidateList() {
     return this.getCandidates()
-      .filter((c) => c.getState())
+      .filter((c) => c.isSet())
       .map((cand) => cand.getDigit());
   }
 
@@ -110,12 +110,12 @@ export default class Cell {
   }
 
   public getSetCandidates() {
-    return this.candidates.filter((c) => c.getState() == true);
+    return this.candidates.filter((c) => c.isSet() == true);
   }
 
   public hasSameCandidatesAs(cell: Cell) {
     return this.getCandidates().every(
-      (cand) => cand.getState() == cell.hasCandidate(cand.getDigit()),
+      (cand) => cand.isSet() == cell.hasCandidate(cand.getDigit()),
     );
   }
 

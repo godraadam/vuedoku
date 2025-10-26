@@ -30,5 +30,5 @@ export function useTimer(run: Ref<boolean>) {
     timer.value = 0;
   }
 
-  return { time, minutes, seconds, reset };
+  return { time, minutes, seconds, reset, runnning: run.value };
 }

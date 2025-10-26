@@ -45,7 +45,9 @@
           </div>
         </div>
         <div class="flex items-center gap-2">
-          <label for="share-link" class="text-sm w-48 font-medium">Puzzle Link (Current State)</label>
+          <label for="share-link" class="text-sm w-48 font-medium"
+            >Puzzle Link (Current State)</label
+          >
           <div
             id="share-link"
             class="text-sm text-gray-900 hover:text-blue-500 transition-colors cursor-pointer font-light"
@@ -55,7 +57,9 @@
           </div>
         </div>
         <div class="flex items-center gap-2">
-          <label for="share-string" class="text-sm w-48 font-medium">Puzzle String (Original)</label>
+          <label for="share-string" class="text-sm w-48 font-medium"
+            >Puzzle String (Original)</label
+          >
           <div
             id="share-string"
             class="text-sm text-gray-900 hover:text-blue-500 transition-colors cursor-pointer font-light"
@@ -84,6 +88,7 @@
 <script setup lang="ts">
 import Modal from "@/components/ui/Modal.vue";
 import useState from "@/composables/useState";
+import { computed } from "vue";
 
 const { autoCandidates, autoHint, input, sudoku } = useState();
 
@@ -97,18 +102,21 @@ const originalPuzzleStringTruncated =
     ? originalPuzzleString.slice(0, 30) + "..." + originalPuzzleString.slice(-10)
     : originalPuzzleString;
 
-const currentPuzzleString = sudoku.value.encodeState();
-const currentPuzzleStringTruncated =
-  currentPuzzleString.length > 50
-    ? currentPuzzleString.slice(0, 30) + "..." + currentPuzzleString.slice(-10)
-    : currentPuzzleString;
+const currentPuzzleString = computed(() => sudoku.value.encodeState());
+const currentPuzzleStringTruncated = computed(() =>
+  currentPuzzleString.value.length > 50
+    ? currentPuzzleString.value.slice(0, 30) + "..." + currentPuzzleString.value.slice(-10)
+    : currentPuzzleString.value,
+);
 
-const currrentPuzzleLink =
-  window.location.origin + window.location.pathname + "/" + currentPuzzleString;
-const currrentPuzzleLinkTruncated =
-  currrentPuzzleLink.length > 50
-    ? currrentPuzzleLink.slice(0, 30) + "..." + currrentPuzzleLink.slice(-10)
-    : currrentPuzzleLink;
+const currrentPuzzleLink = computed(
+  () => window.location.origin + "/" + currentPuzzleString.value,
+);
+const currrentPuzzleLinkTruncated = computed(() =>
+  currrentPuzzleLink.value.length > 50
+    ? currrentPuzzleLink.value.slice(0, 30) + "..." + currrentPuzzleLink.value.slice(-10)
+    : currrentPuzzleLink.value,
+);
 
 defineProps<{ isOpen: boolean }>();
 const emits = defineEmits<{ close: [] }>();

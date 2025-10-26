@@ -203,7 +203,6 @@ export default class Sudoku {
   }
 
   public setCandidate(cand: Candidate, state: boolean) {
-    console.log(cand);
     this.userSetCandidatesCache.set(cand, state);
     cand.setState(state);
   }

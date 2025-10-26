@@ -20,7 +20,7 @@ export class HiddenTupleResolver extends Resolver {
 
         // find candidates that occur exactly N times in unit
         const candidateDigits = digitCounts
-          .filter(({ count }) => count == this.tupleSize)
+          .filter(({ count }) => count <= this.tupleSize && count >= 1)
           .map(({ digit }) => digit);
 
         // no hidden tuple in this unit, try next ones
@@ -37,7 +37,7 @@ export class HiddenTupleResolver extends Resolver {
 
           // if elements of N-tuple occurs in a total of N cells, it's a hidden N-tuple
           if (candidateCells.length == this.tupleSize) {
-            // naked simples can be placed
+            // hidden singles can be placed
             if (this.tupleSize == 1) {
               return {
                 type: "place",
@@ -47,13 +47,10 @@ export class HiddenTupleResolver extends Resolver {
             }
 
             // check if there is anything to remove
-            const candidateCellIdxs = candidateCells.map((cell) => cell.getCellIdx());
-            const candidates = unit
-              .getCells()
-              .filter((cell) => !candidateCellIdxs.includes(cell.getCellIdx()))
+            const candidates = candidateCells
               .map((cell) => cell.getSetCandidates())
               .flat()
-              .filter((cand) => tuple.some((digit) => cand.getDigit() == digit));
+              .filter((c) => !tuple.includes(c.getDigit()));
 
             if (candidates.length > 0) {
               const participants = candidateCells
@@ -64,9 +61,9 @@ export class HiddenTupleResolver extends Resolver {
                 type: "eliminate",
                 candidates,
                 participants,
-                reason: `${this.getName()} ${tuple.join(
-                  ", ",
-                )} in ${unit.getDisplay()} ${unit.getIdx() + 1}`,
+                reason: `${this.getName()} ${tuple
+                  .map((d) => d + 1)
+                  .join(", ")} in ${unit.getDisplay()} ${unit.getIdx() + 1}`,
               };
             }
           }

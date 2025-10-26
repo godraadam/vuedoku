@@ -1,7 +1,13 @@
 <template>
   <div class="w-full flex justify-center">
     <div class="grid grid-cols-9 grid-rows-9 max-w-fit">
-      <Cell v-for="cell of cells" :key="cell.getCellIdx()" :cell @mouseenter="focusedCell = cell" />
+      <Cell
+        v-for="cell of cells"
+        :key="cell.getCellIdx()"
+        :cell
+        @mouseenter="focusedCell = cell"
+        @click="focusedCell = cell"
+      />
     </div>
   </div>
 </template>
@@ -13,7 +19,8 @@ import Cell from "@/components/Cell.vue";
 import { useKeyboardEvent } from "@/composables/useKeyboardEvent";
 import useState from "@/composables/useState";
 
-const { focusedCell, sudoku, reset } = useState();
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const { focusedCell, sudoku, reset, sudokuSolver: _ } = useState();
 
 const cells = computed(() => sudoku.value.getCells());
 
@@ -34,7 +41,7 @@ useKeyboardEvent(
       ].includes(e.code)
     ) {
       const candidate = focusedCell.value.getCandidate(Number(e.code.replace("Digit", "")) - 1);
-      return sudoku.value.setCandidate(candidate, !candidate.getState());
+      return sudoku.value.setCandidate(candidate, !candidate.isSet());
     }
     if (["1", "2", "3", "4", "5", "6", "7", "8", "9"].includes(e.key)) {
       return sudoku.value.placeValueInCell(focusedCell.value.getCellIdx(), Number(e.key) - 1);

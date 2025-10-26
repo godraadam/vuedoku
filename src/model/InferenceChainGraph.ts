@@ -10,11 +10,15 @@ export class InferenceGraph {
   private nodes: Array<Candidate>;
   private inferenceGraph: Array<Array<GraphElement>> = [];
 
-  constructor(sudoku: Sudoku, nodes?: Array<Candidate>) {
+  constructor(sudoku: Sudoku) {
     this.sudoku = sudoku;
     this.inferenceGraph = Array.from({ length: 81 * 9 }, () => Array(81 * 9).fill(undefined));
+    this.nodes = [];
+  }
 
+  public build(nodes?: Array<Candidate>) {
     this.nodes = nodes ?? this.sudoku.getAllSetCandidates();
+
     for (const [candA, candB] of kCombinations(this.nodes, 2)) {
       const cellA = candA.getCell();
       const cellB = candB.getCell();
@@ -115,8 +119,8 @@ export class InferenceGraph {
       nextType: LinkType;
     }> = [
       {
-        path: [{ candidate: start, type: linkType }],
-        nextType: linkType === "strong" ? "weak" : "strong",
+        path: [{ candidate: start, type: "weak" }],
+        nextType: linkType,
       },
     ];
 

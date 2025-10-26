@@ -1,6 +1,6 @@
 <template>
   <div
-    class="text-xs lg:text-base font-thin text-transparent data-[on=true]:text-gray-500 data-[on=true]:font-extralight group-hover:text-gray-500 data-[on=true]:group-hover:text-gray-900 data-[place=true]:text-blue-500 data-[place=true]:font-medium data-[remove=true]:text-red-600 data-[participant=true]:border border-gray-500 rounded-full flex justify-center items-center data-[remove=true]:font-medium cursor-pointer hover:text-gray-900 transition-colors duration-100 ease-out"
+    class="text-xs md:text-base font-thin text-transparent data-[on=true]:text-gray-500 data-[on=true]:font-extralight group-hover:text-gray-500 data-[on=true]:group-hover:text-gray-900 data-[place=true]:text-blue-500 data-[place=true]:font-medium data-[remove=true]:text-red-600 data-[participant=true]:border border-gray-500 rounded-full flex justify-center items-center data-[remove=true]:font-medium cursor-pointer hover:text-gray-900 transition-colors duration-100 ease-out"
     :data-on="isOn"
     :data-place="canBePlaced"
     :data-remove="canBeRemoved"
@@ -22,7 +22,7 @@ const props = defineProps<{
 
 const isOn = computed(() =>
   autoCandidates.value
-    ? props.candidate.getState()
+    ? props.candidate.isSet()
     : sudoku.value.getUserSetCandidates().get(props.candidate),
 );
 const {
@@ -53,7 +53,7 @@ function handleClick(e: PointerEvent) {
       props.candidate.getDigit(),
     );
   } else {
-    sudoku.value.setCandidate(props.candidate, !props.candidate.getState());
+    sudoku.value.setCandidate(props.candidate, !props.candidate.isSet());
   }
 }
 </script>

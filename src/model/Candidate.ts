@@ -13,7 +13,7 @@ export default class Candidate {
     this.idx = cell.getCellIdx() * 9 + digit;
   }
 
-  public getState() {
+  public isSet() {
     return this.state;
   }
 

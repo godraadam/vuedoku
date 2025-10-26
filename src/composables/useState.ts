@@ -50,6 +50,7 @@ function useState() {
 
   return {
     sudoku,
+    sudokuSolver,
     candidateToPlace,
     candidatesToRemove,
     eliminationParticipants,
