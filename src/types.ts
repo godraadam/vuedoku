@@ -1,4 +1,5 @@
 import type Candidate from "@/model/Candidate";
+import type { difficulties } from "@/consts";
 
 export type UnitType = "row" | "col" | "box" | "xchute" | "ychute";
 
@@ -22,3 +23,5 @@ export type EliminationFn = () => EliminationResult;
 export type Step =
   | ({ type: "place" } & PlacementResult)
   | ({ type: "eliminate" } & EliminationResult);
+
+export type Difficulty = (typeof difficulties)[number];

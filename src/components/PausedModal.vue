@@ -9,7 +9,7 @@
             v-model="autoCandidates"
             type="checkbox"
             id="auto-candidates"
-            class="rounded-md accent-blue-600 size-3.5"
+            class="rounded-md accent-theme-600 size-3.5"
           />
           <label for="auto-candidates" class="text-sm text-gray-900">Auto Candidates</label>
         </div>
@@ -18,7 +18,7 @@
             v-model="autoHint"
             type="checkbox"
             id="auto-hints"
-            class="rounded-md accent-blue-600 size-3.5"
+            class="rounded-md accent-theme-600 size-3.5"
           />
           <label for="auto-hints" class="text-sm text-gray-900">Auto Hints</label>
         </div>
@@ -38,7 +38,7 @@
           <label for="share-link" class="text-sm w-48 font-medium">Puzzle Link (Original)</label>
           <div
             id="share-link"
-            class="text-sm text-gray-900 hover:text-blue-500 transition-colors cursor-pointer font-light"
+            class="text-sm text-gray-900 hover:text-theme-500 transition-colors cursor-pointer font-light"
             @click="() => onCopy(shareLink)"
           >
             {{ shareLinkTruncated }}
@@ -50,7 +50,7 @@
           >
           <div
             id="share-link"
-            class="text-sm text-gray-900 hover:text-blue-500 transition-colors cursor-pointer font-light"
+            class="text-sm text-gray-900 hover:text-theme-500 transition-colors cursor-pointer font-light"
             @click="() => onCopy(currrentPuzzleLink)"
           >
             {{ currrentPuzzleLinkTruncated }}
@@ -62,7 +62,7 @@
           >
           <div
             id="share-string"
-            class="text-sm text-gray-900 hover:text-blue-500 transition-colors cursor-pointer font-light"
+            class="text-sm text-gray-900 hover:text-theme-500 transition-colors cursor-pointer font-light"
             @click="() => onCopy(originalPuzzleString)"
           >
             {{ originalPuzzleStringTruncated }}
@@ -74,7 +74,7 @@
           >
           <div
             id="share-string"
-            class="text-sm text-gray-900 hover:text-blue-500 transition-colors cursor-pointer font-light"
+            class="text-sm text-gray-900 hover:text-theme-500 transition-colors cursor-pointer font-light"
             @click="() => onCopy(currentPuzzleString)"
           >
             {{ currentPuzzleStringTruncated }}

@@ -16,7 +16,6 @@ export class XChainResolver extends Resolver {
     for (const digit of digits()) {
       this.graph.build(this.sudoku.getAllSetCandidates().filter((c) => c.getDigit() == digit));
       for (const chain of this.graph.getChains("strong", 4)) {
-        console.log(chain);
         const start = chain.at(0)!.candidate;
         const end = chain.at(-1)!.candidate;
         const candidates = this.sudoku

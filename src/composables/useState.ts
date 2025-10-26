@@ -6,11 +6,19 @@ import Sudoku from "@/model/Sudoku";
 import { SudokuSolver } from "@/model/SudokuSolver";
 import type Cell from "@/model/Cell";
 import { useTimer } from "@/composables/useTimer";
+import { difficulties } from "@/consts";
+import type { Difficulty } from "@/types";
 
 function useState() {
   const route = useRoute();
   const input = computed(() => route.params.input as string | undefined);
   const values = computed(() => input.value?.split("").map((c) => Number(c) - 1));
+  const difficulty = computed(
+    () =>
+      (difficulties.includes((route.params.difficulty as Difficulty) ?? "")
+        ? (route.params.difficulty as string)
+        : "easy") as Difficulty,
+  );
 
   const autoCandidates = ref(true);
   const autoHint = ref(false);
@@ -49,6 +57,7 @@ function useState() {
   }
 
   return {
+    difficulty,
     sudoku,
     sudokuSolver,
     candidateToPlace,

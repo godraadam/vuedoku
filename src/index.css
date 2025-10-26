@@ -1,1 +1,16 @@
 @import "tailwindcss";
+@source inline("{hover:,disabled:,}{text,bg,}-{red,green,blue,gray,amber}-{50,{100..900..100},950}");
+
+@theme inline {
+  --color-theme-50: var(--var-color-theme-50);
+  --color-theme-100: var(--var-color-theme-100);
+  --color-theme-200: var(--var-color-theme-200);
+  --color-theme-300: var(--var-color-theme-300);
+  --color-theme-400: var(--var-color-theme-400);
+  --color-theme-500: var(--var-color-theme-500);
+  --color-theme-600: var(--var-color-theme-600);
+  --color-theme-700: var(--var-color-theme-700);
+  --color-theme-800: var(--var-color-theme-800);
+  --color-theme-900: var(--var-color-theme-900);
+  --color-theme-950: var(--var-color-theme-950);
+}
