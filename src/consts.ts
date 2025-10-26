@@ -1,5 +1,9 @@
 export const difficulties = ["easy", "medium", "hard", "diabolical"] as const;
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const _ = import.meta.glob('/src/sudokus/*.ts');
+
+
 export const difficultySudokuImportMap: Record<string, string> = {
   easy: "/src/sudokus/easy.ts",
   medium: "/src/sudokus/medium.ts",
