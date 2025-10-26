@@ -1,10 +1,10 @@
 <template>
   <div
-    :class="`size-22 p-2 flex group relative items-center justify-center border border-gray-300 group${isAtBottomEdge ? ' border-b-gray-700' : ''}${isAtTopEdge ? ' border-t-gray-700' : ''}${isAtLeftEdge ? ' border-l-gray-700' : ''}${isAtRightEdge ? ' border-r-gray-700' : ''}${isFocused ? ' bg-blue-200' : ''}${focusedCellSharedUnitCount == 2 ? ' bg-blue-100' : ''}${focusedCellSharedUnitCount == 1 ? ' bg-blue-50' : ''}`"
+    :class="`size-10 lg:size-22 p-0.5 lg:p-2 flex group relative items-center justify-center border border-gray-300 group${isAtBottomEdge ? ' border-b-gray-700' : ''}${isAtTopEdge ? ' border-t-gray-700' : ''}${isAtLeftEdge ? ' border-l-gray-700' : ''}${isAtRightEdge ? ' border-r-gray-700' : ''}${isFocused ? ' bg-blue-200' : ''}${focusedCellSharedUnitCount == 2 ? ' bg-blue-100' : ''}${focusedCellSharedUnitCount == 1 ? ' bg-blue-50' : ''}`"
   >
     <div
       v-if="cell.isFilled()"
-      class="text-5xl font-semibold"
+      class="text-2sxl lg:text-5xl font-semibold"
       :class="cell.isGiven() ? 'text-gray-900' : 'text-blue-600'"
     >
       {{ cell.getValue() + 1 }}
