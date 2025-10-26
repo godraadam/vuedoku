@@ -6,8 +6,8 @@
         <RouterLink
           v-for="option of difficultyOptions"
           :key="option.to"
-          :class="`text-${option.color}-600 w-24 text-center cursor-pointer rounded-lg px-3 py-1 hover:bg-${option.color}-50 transition-colors`"
-          :activeClass="`bg-${option.color}-600 text-white hover:bg-${option.color}-600`"
+          :data-active="difficulty == option.to"
+          :class="`text-gray-600 w-24 cursor-pointer hover:text-${option.color}-500 transition-colors data-[active=true]:text-${option.color}-700 data-[active=true]:hover:text-${option.color}-700`"
           :to="option.to"
         >
           {{ option.name }}
