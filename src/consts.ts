@@ -1,10 +1,11 @@
-export const difficulties = ["easy", "medium", "hard", "diabolical"] as const;
+export const difficulties = ["easy", "medium", "hard", "diabolical", "custom"] as const;
 
 export const difficultyColorMap: Record<string, string> = {
   easy: "green",
   medium: "blue",
   hard: "amber",
   diabolical: "red",
+  custom: "gray",
 };
 
 export const difficultyNameMap: Record<string, string> = {
@@ -12,4 +13,5 @@ export const difficultyNameMap: Record<string, string> = {
   medium: "Medium",
   hard: "Hard",
   diabolical: "Diabolical",
+  custom: "Custom",
 };

@@ -1,19 +1,17 @@
 <template>
   <main class="h-screen w-screen flex items-center justify-center">
-    <div class="flex flex-col gap-2">
-      <label for="input" class="text-sm font-medium text-gray-900">Select difficulty</label>
-      <div class="flex gap-1 justify-between">
-        <RouterLink
+    <div class="flex flex-col gap-8 w-md">
+      <div class="flex flex-col gap-1">
+        <button
           v-for="option of difficultyOptions"
           :key="option.to"
-          :data-active="difficulty == option.to"
-          :class="`text-gray-600 w-24 cursor-pointer hover:text-${option.color}-500 transition-colors data-[active=true]:text-${option.color}-700 data-[active=true]:hover:text-${option.color}-700`"
-          :to="option.to"
+          :class="`text-${option.color}-600 rounded-lg px-3 py-2 w-full text-center cursor-pointer border border-${option.color}-600 hover:bg-${option.color}-100 transition-colors`"
+          @click="() => onPlay(option.to)"
         >
-          {{ option.name }}
-        </RouterLink>
+          {{ `Play Random ${option.name} Sudoku` }}
+        </button>
       </div>
-      <div class="flex gap-3 items-center justify-between mt-6 mb-4">
+      <div class="flex gap-3 items-center justify-between">
         <div class="h-px w-full bg-black" />
         Or
         <div class="h-px w-full bg-black" />
@@ -30,25 +28,21 @@
         />
       </div>
       <button
-        :disabled="sudokuString.length > 0 && !isValid"
-        class="px-4 py-2 bg-theme-600 text-white hover:bg-theme-600 transition duration-300 rounded-lg cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-gray-900"
-        @click="onPlay"
+        :disabled="!isValid"
+        class="px-4 py-2 bg-black text-white hover:bg-gray-900 transition duration-300 rounded-lg cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-gray-900"
+        @click="() => onPlay('custom', sudokuString)"
       >
-        {{ buttonText }}
+        Play Custom Sudoku
       </button>
     </div>
   </main>
 </template>
 
 <script setup lang="ts">
-import useState from "@/composables/useState";
-import {
-  difficulties,
-  difficultyColorMap,
-  difficultyNameMap,
-} from "@/consts";
+import { difficulties, difficultyColorMap, difficultyNameMap } from "@/consts";
+import type { Difficulty } from "@/types";
 import { computed, onMounted, ref } from "vue";
-import { RouterLink, useRouter } from "vue-router";
+import { useRouter } from "vue-router";
 
 const router = useRouter();
 const sudokuString = ref("");
@@ -58,42 +52,35 @@ const isValid = computed(
     sudokuString.value.length == 81 && sudokuString.value.split("").every((ch) => /[0-9]/.test(ch)),
 );
 
-const { difficulty } = useState();
+const difficultyOptions = difficulties
+  .filter((diff) => diff != "custom")
+  .map((difficulty) => ({
+    to: difficulty,
+    color: difficultyColorMap[difficulty],
+    name: difficultyNameMap[difficulty],
+  }));
 
-const buttonText = computed(
-  () =>
-    `Play ${sudokuString.value.length > 1 ? "custom" : "random"} ${sudokuString.value.length > 1 ? "" : difficulty.value} sudoku`,
-);
-
-const difficultyOptions = difficulties.map((difficulty) => ({
-  to: difficulty,
-  color: difficultyColorMap[difficulty],
-  name: difficultyNameMap[difficulty],
-}));
-
-async function onPlay() {
-  if (sudokuString.value) {
-    return await router.replace(sudokuString.value);
-  }
-
+async function onPlay(difficulty: Difficulty, sudokuString?: string) {
   let data: Array<string> = [];
   // need to spell out import paths for vite
-  if (difficulty.value == "easy") {
+  if (difficulty == "easy") {
     const module = await import("@/sudokus/easy.ts");
     data = module.default as Array<string>;
-  } else if (difficulty.value == "medium") {
+  } else if (difficulty == "medium") {
     const module = await import("@/sudokus/medium.ts");
     data = module.default as Array<string>;
-  } else if (difficulty.value == "hard") {
+  } else if (difficulty == "hard") {
     const module = await import("@/sudokus/hard.ts");
     data = module.default as Array<string>;
-  } else if (difficulty.value == "diabolical") {
+  } else if (difficulty == "diabolical") {
     const module = await import("@/sudokus/diabolical.ts");
     data = module.default as Array<string>;
+  } else if (difficulty == "custom" && sudokuString) {
+    return await router.replace(`custom/${sudokuString}`);
   }
 
   const randomId = Math.floor(Math.random() * 10000);
-  return await router.replace(`${difficulty.value}/${data[randomId]}`);
+  return await router.replace(`${difficulty}/${data[randomId]}`);
 }
 
 onMounted(() => console.log("Welcome to my sudoku page!"));
