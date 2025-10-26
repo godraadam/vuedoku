@@ -90,7 +90,7 @@ import Modal from "@/components/ui/Modal.vue";
 import useState from "@/composables/useState";
 import { computed } from "vue";
 
-const { autoCandidates, autoHint, input, sudoku } = useState();
+const { autoCandidates, autoHint, input, sudoku, difficulty } = useState();
 
 const shareLink = window.location.origin + window.location.pathname;
 const shareLinkTruncated =
@@ -110,7 +110,7 @@ const currentPuzzleStringTruncated = computed(() =>
 );
 
 const currrentPuzzleLink = computed(
-  () => window.location.origin + "/" + currentPuzzleString.value,
+  () => window.location.origin + "/" + difficulty.value + "/" + currentPuzzleString.value,
 );
 const currrentPuzzleLinkTruncated = computed(() =>
   currrentPuzzleLink.value.length > 50
