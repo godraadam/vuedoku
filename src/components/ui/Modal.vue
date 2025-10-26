@@ -27,7 +27,7 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, useAttrs } from "vue";
 
-import IconButton from "@/components/ui/IconButton.vue";
+import IconButton from "@/components/ui/Button.vue";
 import CloseIcon from "@/components/ui/icons/close.svg";
 import { cn } from "@/util";
 

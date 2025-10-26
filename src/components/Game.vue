@@ -38,7 +38,7 @@
 import { ref, watch } from "vue";
 import Sudoku from "@/components/Sudoku.vue";
 import useState from "@/composables/useState";
-import IconButton from "@/components/ui/IconButton.vue";
+import IconButton from "@/components/ui/Button.vue";
 import PlayIcon from "@/components/ui/icons/play.svg";
 import PauseIcon from "@/components/ui/icons/pause.svg";
 import ResetIcon from "@/components/ui/icons/reset.svg";
