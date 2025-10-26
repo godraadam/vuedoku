@@ -46,7 +46,6 @@ import {
   difficulties,
   difficultyColorMap,
   difficultyNameMap,
-  difficultySudokuImportMap,
 } from "@/consts";
 import { computed, onMounted, ref } from "vue";
 import { RouterLink, useRouter } from "vue-router";
@@ -76,9 +75,23 @@ async function onPlay() {
   if (sudokuString.value) {
     return await router.replace(sudokuString.value);
   }
-  const module = await import(difficultySudokuImportMap[difficulty.value]);
 
-  const data = module.default as Array<string>;
+  let data: Array<string> = [];
+  // need to spell out import paths for vite
+  if (difficulty.value == "easy") {
+    const module = await import("@/sudokus/easy.ts");
+    data = module.default as Array<string>;
+  } else if (difficulty.value == "medium") {
+    const module = await import("@/sudokus/medium.ts");
+    data = module.default as Array<string>;
+  } else if (difficulty.value == "hard") {
+    const module = await import("@/sudokus/hard.ts");
+    data = module.default as Array<string>;
+  } else if (difficulty.value == "diabolical") {
+    const module = await import("@/sudokus/diabolical.ts");
+    data = module.default as Array<string>;
+  }
+
   const randomId = Math.floor(Math.random() * 10000);
   return await router.replace(`${difficulty.value}/${data[randomId]}`);
 }
