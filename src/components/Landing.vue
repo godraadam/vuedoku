@@ -1,14 +1,15 @@
 <template>
   <main class="h-screen w-screen flex items-center justify-center">
     <div class="flex flex-col gap-8 w-md">
-      <div class="flex flex-col gap-1">
+      <div class="flex flex-col gap-3">
         <button
           v-for="option of difficultyOptions"
           :key="option.to"
-          :class="`text-${option.color}-600 rounded-lg px-3 py-2 w-full text-center cursor-pointer border border-${option.color}-600 hover:bg-${option.color}-100 transition-colors`"
+          :class="`text-white rounded-lg flex items-center gap-2 justify-center px-3 py-2 w-full text-center cursor-pointer bg-black hover:text-${option.color}-400 transition-colors`"
           @click="() => onPlay(option.to)"
         >
           {{ `Play Random ${option.name} Sudoku` }}
+          <PlayIcon :class="`size-5 text-${option.color}-400`"/>
         </button>
       </div>
       <div class="flex gap-3 items-center justify-between">
@@ -39,10 +40,12 @@
 </template>
 
 <script setup lang="ts">
-import { difficulties, difficultyColorMap, difficultyNameMap } from "@/consts";
-import type { Difficulty } from "@/types";
 import { computed, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
+
+import PlayIcon from "@/components/ui/icons/play.svg";
+import { difficulties, difficultyColorMap, difficultyNameMap } from "@/consts";
+import type { Difficulty } from "@/types";
 
 const router = useRouter();
 const sudokuString = ref("");
