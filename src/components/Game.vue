@@ -22,7 +22,7 @@
           {{ nextStep ? nextStep.reason : isSolved ? "Solved" : "No idea fam" }}
         </div>
         <div class="flex items-center md:gap-3">
-          <div :class="`text-${difficultyColorMap[difficulty]}-700`">
+          <div :class="`hidden md:block text-${difficultyColorMap[difficulty]}-700`">
             {{ difficultyNameMap[difficulty] }}
           </div>
 

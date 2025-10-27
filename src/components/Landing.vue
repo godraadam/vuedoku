@@ -1,7 +1,7 @@
 <template>
   <main class="h-screen w-screen flex items-center justify-center px-3">
     <div class="flex flex-col gap-8 w-lg">
-      <h1 class="text-5xl font-bold pb-6 pt-10 md:pt-0">
+      <h1 class="text-5xl font-bold mb-6 mt-8 md:mt-0">
         Sudoku by
         <a href="https://godraadam.com" class="hover:text-sky-500 hover:underline transition-colors">godraadam</a>
       </h1>

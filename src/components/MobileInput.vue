@@ -16,18 +16,18 @@
         Candidate
       </button>
     </div>
-    <div class="w-full grid grid-cols-5 grid-rows-2 gap-2">
+    <div class="w-full grid grid-cols-5 grid-rows-2 gap-1.5">
       <button
         v-for="i in 9"
         :data-mode="mode"
         :key="i"
-        class="flex items-center justify-center border-2 border-gray-300 text-theme-700/90 text-2xl aspect-square data-[mode=candidate]:text-xs"
+        class="flex items-center justify-center border-2 border-gray-300 text-gray-900 text-2xl h-12 w-full data-[mode=candidate]:text-sm"
         @click="handleClick(i)"
       >
         {{ i }}
       </button>
       <button
-        class="flex items-center justify-center border-2 border-gray-300 text-theme-700/90 text-2xl aspect-square"
+        class="flex items-center justify-center border-2 border-gray-300 text-gray-900 text-2xl h-12 w-full"
         @click="emits('input', 'remove', 0)"
       >
         X
