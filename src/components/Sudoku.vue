@@ -1,5 +1,5 @@
 <template>
-  <div v-if="running" class="grid grid-cols-9 grid-rows-9 w-full">
+  <div v-if="running || isSolved" class="grid grid-cols-9 grid-rows-9 w-full">
     <Cell
       v-for="cell of cells"
       :key="cell.getCellIdx()"
@@ -34,7 +34,7 @@ import useState from "@/composables/useState";
 import PauseIcon from "@/components/ui/icons/pause.svg";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const { focusedCell, sudoku, sudokuSolver: _, running } = useState();
+const { focusedCell, sudoku, sudokuSolver: _, running, isSolved } = useState();
 
 const cells = computed(() => sudoku.value.getCells());
 

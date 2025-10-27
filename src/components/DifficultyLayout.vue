@@ -18,6 +18,8 @@ const difficulty = computed(
       : "easy") as Difficulty,
 );
 
+const input = computed(() => route.params.input as string | undefined);
+
 watch(
   difficulty,
   async () => {
@@ -28,8 +30,10 @@ watch(
         `var(--color-${difficultyColorMap[difficulty.value]}-${shade})`,
       ),
     );
-    const randomSudoku = await getRandomSudoku(difficulty.value);
-    router.replace(`/${difficulty.value}/${randomSudoku}`);
+    if (!input.value) {
+      const randomSudoku = await getRandomSudoku(difficulty.value);
+      router.replace(`/${difficulty.value}/${randomSudoku}`);
+    }
   },
   { immediate: true },
 );

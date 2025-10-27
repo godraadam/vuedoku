@@ -26,8 +26,8 @@
             {{ difficultyNameMap[difficulty] }}
           </div>
 
-          <Tooltip>
-            <IconButton class="font-light w-24" @click="onTogglePause"
+          <Tooltip delay="1000">
+            <IconButton class="font-light w-24" :disabled="isSolved" @click="onTogglePause"
               >{{ time }}<PlayIcon v-if="!running" class="size-5" /><PauseIcon
                 v-else
                 class="size-5"
@@ -37,13 +37,13 @@
               <span class="text-sm font-mono text-gray-400"> [Spacebar]</span></template
             >
           </Tooltip>
-          <Tooltip>
+          <Tooltip delay="1000">
             <IconButton @click="reset"><ResetIcon class="size-5" /> </IconButton>
             <template #popper
               >Reset puzzle <span class="text-sm font-mono text-gray-400">[Cmd+R]</span></template
             >
           </Tooltip>
-          <Tooltip>
+          <Tooltip delay="1000">
             <IconButton @click="onToggleLike">
               <HeartFilledIcon v-if="isLiked" class="size-5 text-theme-500" />
               <HeartOutlineIcon v-else class="size-5" />
@@ -54,7 +54,7 @@
             >
           </Tooltip>
 
-          <Tooltip>
+          <Tooltip delay="1000">
             <IconButton @click="showHint = true" @dblclick="autoHint = !autoHint"
               ><HintIcon v-if="!showHint" class="size-5" /><HintIconFilled
                 v-else
@@ -65,16 +65,62 @@
               >Get a hint <span class="text-sm font-mono text-gray-400"> [Cmd+H]</span></template
             >
           </Tooltip>
-          <Tooltip>
-            <IconButton @click="onToggleShare(true)">
-              <ShareIcon class="size-5" />
-            </IconButton>
+          <Tooltip delay="1000">
+            <DropDownContext
+              :close-on-select="false"
+            >
+              <DropDownTrigger>
+                <IconButton>
+                  <ShareIcon class="size-5" />
+                </IconButton>
+              </DropDownTrigger>
+              <DropDownContent class="w-64">
+                <DropDownItem class="whitespace-nowrap text-sm">
+                  <CopyIcon v-if="!linkCopied" class="size-5 text-gray-900" />
+                  <CoypCheckIcon v-else class="size-5 text-theme-600" />
+                  <button class="w-full text-left" @click="onCopy('original')">Copy link to puzzle</button></DropDownItem
+                >
+                <DropDownItem class="whitespace-nowrap text-sm w-full"
+                  ><CopyIcon v-if="!currentsStateLinkCopied" class="size-5 text-gray-900" />
+                  <CoypCheckIcon v-else class="size-5 text-theme-600" />
+                  <button class="w-full text-left" @click="onCopy('current')">
+                    Copy link to current state
+                  </button></DropDownItem
+                >
+              </DropDownContent>
+            </DropDownContext>
             <template #popper>Share Puzzle</template>
           </Tooltip>
-          <Tooltip>
-            <IconButton @click="onToggleSettings(true)">
-              <SettingsIcon class="size-5" />
-            </IconButton>
+          <Tooltip delay="1000">
+            <DropDownContext :close-on-select="false">
+              <DropDownTrigger>
+                <IconButton> <SettingsIcon class="size-5" /> </IconButton
+              ></DropDownTrigger>
+              <DropDownContent class="w-64">
+                <DropDownItem class="whitespace-nowrap text-sm"
+                  ><div class="flex gap-2 items-center w-full">
+                    <input
+                      v-model="autoCandidates"
+                      type="checkbox"
+                      class="size-4 accent-theme-600 rounded-lg"
+                      id="auto-candidates"
+                    /><label for="auto-candidates" class="text-gray-900 text-sm w-full"
+                      >Auto Candidates</label
+                    >
+                  </div></DropDownItem
+                >
+                <DropDownItem class="whitespace-nowrap text-sm"
+                  ><div class="flex gap-2 items-center w-full">
+                    <input
+                      v-model="autoHint"
+                      type="checkbox"
+                      class="size-4 accent-theme-600 rounded-lg"
+                      id="auto-hint"
+                    /><label for="auto-hint" class="text-gray-900 text-sm w-full">Auto Hints</label>
+                  </div></DropDownItem
+                >
+              </DropDownContent>
+            </DropDownContext>
             <template #popper>Open Settings</template>
           </Tooltip>
         </div>
@@ -87,8 +133,6 @@
     </div>
   </div>
   <GameEndModal :is-open="gameEndModelOpen" @close="gameEndModelOpen = false" />
-  <SettingsModal :is-open="settingsModalOpen" @close="onToggleSettings(false)" />
-  <ShareModal :is-open="shareModalOpen" @close="onToggleShare(false)" />
 </template>
 
 <script setup lang="ts">
@@ -103,6 +147,8 @@ import IconButton from "@/components/ui/Button.vue";
 import PlayIcon from "@/components/ui/icons/play.svg";
 import PauseIcon from "@/components/ui/icons/pause.svg";
 import ResetIcon from "@/components/ui/icons/reset.svg";
+import CopyIcon from "@/components/ui/icons/copy.svg";
+import CoypCheckIcon from "@/components/ui/icons/check-copied.svg";
 import SettingsIcon from "@/components/ui/icons/settings.svg";
 import HeartFilledIcon from "@/components/ui/icons/heart-filled.svg";
 import HeartOutlineIcon from "@/components/ui/icons/heart-outline.svg";
@@ -113,13 +159,13 @@ import ShareIcon from "@/components/ui/icons/share.svg";
 import { useKeyboardEvent } from "@/composables/useKeyboardEvent";
 import GameEndModal from "@/components/GameEndModal.vue";
 import { difficultyColorMap, difficultyNameMap } from "@/consts";
-import SettingsModal from "@/components/SettingsModal.vue";
-import ShareModal from "@/components/ShareModal.vue";
 import MobileInput from "@/components/MobileInput.vue";
+import DropDownContext from "@/components/ui/dropdown/DropDownContext.vue";
+import DropDownTrigger from "@/components//ui/dropdown/DropDownTrigger.vue";
+import DropDownContent from "@/components//ui/dropdown/DropDownContent.vue";
+import DropDownItem from "@/components//ui/dropdown/DropDownItem.vue";
 
 const gameEndModelOpen = ref(false);
-const settingsModalOpen = ref(false);
-const shareModalOpen = ref(false);
 
 const {
   isSolved,
@@ -131,11 +177,15 @@ const {
   difficulty,
   showHint,
   autoHint,
+  autoCandidates,
   sudoku,
   focusedCell,
 } = useState();
 
 const router = useRouter();
+
+const linkCopied = ref(false);
+const currentsStateLinkCopied = ref(false);
 
 const isLiked = ref(
   (JSON.parse(localStorage.getItem("likedPuzzles") ?? "[]") as Array<string>).includes(
@@ -165,16 +215,6 @@ function onTogglePause() {
   running.value = !running.value;
 }
 
-function onToggleSettings(open: boolean) {
-  running.value = !open;
-  settingsModalOpen.value = open;
-}
-
-function onToggleShare(open: boolean) {
-  running.value = !open;
-  shareModalOpen.value = open;
-}
-
 function onMobileInput(type: "remove" | "place" | "eliminate", digit: number) {
   if (!running.value) {
     return;
@@ -189,16 +229,16 @@ function onMobileInput(type: "remove" | "place" | "eliminate", digit: number) {
   }
 }
 
+function onExit() {
+  router.push("/");
+}
+
 watch(isSolved, () => {
   if (isSolved.value) {
     running.value = false;
     gameEndModelOpen.value = true;
   }
 });
-
-function onExit() {
-  router.push("/");
-}
 
 useKeyboardEvent((e) => {
   if (e.code == "Space") {
@@ -213,4 +253,16 @@ useKeyboardEvent((e) => {
     onExit();
   }
 });
+
+async function onCopy(state: "original" | "current") {
+  if (state == "original") {
+    await window.navigator.clipboard.writeText(window.location.origin + window.location.pathname);
+    linkCopied.value = true;
+  } else {
+    await window.navigator.clipboard.writeText(
+      window.location.origin + "/" + difficulty.value + "/" + sudoku.value.encodeState(),
+    );
+    currentsStateLinkCopied.value = true;
+  }
+}
 </script>
