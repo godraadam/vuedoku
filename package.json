@@ -23,6 +23,7 @@
     "tailwind-merge": "^3.3.1",
     "tailwindcss": "^4.1.15",
     "vue": "^3.5.22",
+    "vue-confetti-explosion": "^1.0.2",
     "vue-router": "^4.5.1"
   },
   "devDependencies": {

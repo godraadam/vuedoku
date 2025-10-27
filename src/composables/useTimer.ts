@@ -20,6 +20,7 @@ export function useTimer(run: Ref<boolean>) {
   const time = computed(() => `${minutes.value}:${seconds.value}`);
 
   const intervalRef = ref();
+
   onMounted(() => {
     intervalRef.value = setInterval(() => run.value && (timer.value += 1), 1000);
   });
@@ -30,5 +31,5 @@ export function useTimer(run: Ref<boolean>) {
     timer.value = 0;
   }
 
-  return { time, minutes, seconds, reset, runnning: run.value };
+  return { time, minutes, seconds, reset, running: run.value };
 }

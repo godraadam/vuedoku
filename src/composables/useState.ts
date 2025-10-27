@@ -1,4 +1,4 @@
-import { computed, ref, type Ref } from "vue";
+import { computed, ref, watch, type Ref } from "vue";
 import { createSharedComposable } from "@vueuse/core";
 import { useRoute } from "vue-router";
 
@@ -54,7 +54,10 @@ function useState() {
     sudoku.value = new Sudoku(values.value, { autoCandidate: true });
     resetTimer();
     running.value = true;
+    console.log(running.value);
   }
+
+  watch(values, reset);
 
   return {
     difficulty,

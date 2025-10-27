@@ -62,14 +62,12 @@ function handleClick(e: PointerEvent) {
 <style scoped>
 .crossed {
   position: relative;
-  display: inline-block;
 }
 
 .crossed::after {
   content: "";
   position: absolute;
-  right: 20%;
-  top: 40%;
+  top: 50%;
   width: 100%;
   height: 1px;
   background-color: red;

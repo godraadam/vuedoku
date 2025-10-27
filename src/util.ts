@@ -1,6 +1,8 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
+import type { Difficulty } from "@/types";
+
 export function getKCombinations<T>(arr: T[], k: number): T[][] {
   if (k <= 0) return [[]];
   if (k > arr.length) return [];
@@ -82,4 +84,25 @@ export function getTupleName(n: number) {
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
+}
+
+export async function getRandomSudoku(difficulty: Difficulty) {
+  let data: Array<string> = [];
+  // need to spell out import paths for vite
+  if (difficulty == "easy") {
+    const module = await import("@/sudokus/easy.ts");
+    data = module.default as Array<string>;
+  } else if (difficulty == "medium") {
+    const module = await import("@/sudokus/medium.ts");
+    data = module.default as Array<string>;
+  } else if (difficulty == "hard") {
+    const module = await import("@/sudokus/hard.ts");
+    data = module.default as Array<string>;
+  } else if (difficulty == "diabolical") {
+    const module = await import("@/sudokus/diabolical.ts");
+    data = module.default as Array<string>;
+  }
+
+  const randomId = Math.floor(Math.random() * 10000);
+  return data[randomId];
 }

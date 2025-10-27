@@ -34,7 +34,7 @@ export default class Sudoku {
     if (initialValues) {
       this.initalize(initialValues);
     }
-   }
+  }
 
   public initalize(initialValues: Array<number>) {
     initialValues.forEach((val, idx) => {
@@ -186,6 +186,9 @@ export default class Sudoku {
 
   public placeValueInCell(cellIdx: number, value: number, isGiven = false) {
     const cell = this.getCellByIdx(cellIdx);
+    if (cell.isGiven()) {
+      return;
+    }
     cell.setValue(value, isGiven);
     if (this.options?.autoCandidate) {
       this.populateCandidates();

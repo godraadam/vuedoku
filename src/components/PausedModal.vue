@@ -1,7 +1,7 @@
 <template>
   <Modal :is-open @close="emits('close')">
     <div class="w-[728px] h-[680px]">
-      <h1 class="text-3xl font-medium pb-10">Menu</h1>
+      <h1 class="text-3xl font-medium pb-10">Game Paused</h1>
       <h2 class="text-xl font-medium text-gray-900 pb-5">Settings</h2>
       <div class="space-y-1">
         <div class="flex items-center gap-2">

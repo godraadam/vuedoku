@@ -1,7 +1,22 @@
 <template>
-  <main class="h-screen w-screen flex items-center justify-center gap-8 px-2">
+  <div class="h-screen w-screen flex items-center justify-center gap-8 px-2">
+    <div class="absolute top-1/2 flex justify-center">
+      <ConfettiExplosion
+        v-if="isSolved"
+        :particleCount="75"
+        :force="0.6"
+        :colors="[
+          'var(--color-orange-500)',
+          'var(--color-green-500)',
+          'var(--color-blue-500)',
+          'var(--color-red-500)',
+        ]"
+      />
+    </div>
     <div class="space-y-2">
-      <div class="text-gray-900 font-medium flex md:gap-4 min-h-6 w-full justify-between items-center">
+      <div
+        class="text-gray-900 font-medium flex md:gap-4 min-h-6 w-full justify-between items-center"
+      >
         <IconButton class="pl-0" @click="router.push(`/${difficulty}`)"
           ><ChevronLeftIcon class="size-5" />Back</IconButton
         >
@@ -30,12 +45,16 @@
       </div>
       <Sudoku />
     </div>
-  </main>
+  </div>
   <PausedModal :is-open="pauseModalOpen" @close="onTogglePause" />
+  <GameEndModal :is-open="gameEndModelOpen" @close="gameEndModelOpen = false" />
 </template>
 
 <script setup lang="ts">
 import { ref, watch } from "vue";
+import { useRouter } from "vue-router";
+import ConfettiExplosion from "vue-confetti-explosion";
+
 import Sudoku from "@/components/Sudoku.vue";
 import useState from "@/composables/useState";
 import IconButton from "@/components/ui/Button.vue";
@@ -49,10 +68,11 @@ import ChevronLeftIcon from "@/components/ui/icons/chevron-left.svg";
 import PausedModal from "@/components/PausedModal.vue";
 import ShareIcon from "@/components/ui/icons/share.svg";
 import { useKeyboardEvent } from "@/composables/useKeyboardEvent";
-import { useRouter } from "vue-router";
+import GameEndModal from "@/components/GameEndModal.vue";
 import { difficultyColorMap, difficultyNameMap } from "@/consts";
 
 const pauseModalOpen = ref(false);
+const gameEndModelOpen = ref(false);
 
 const { isSolved, autoHint, nextStep, running, time, reset, input, difficulty } = useState();
 
@@ -87,7 +107,13 @@ function onTogglePause() {
   pauseModalOpen.value = !pauseModalOpen.value;
 }
 
-watch(isSolved, () => (running.value = false));
+watch(isSolved, () => {
+  if (isSolved) {
+    running.value = false;
+    gameEndModelOpen.value = true;
+  }
+});
+
 useKeyboardEvent((e) => {
   if (e.code == "Space") {
     onTogglePause();
