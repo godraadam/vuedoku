@@ -1,5 +1,5 @@
 <template>
-  <div class="h-screen pt-20 md:pt-0 md:flex md:items-center md:justify-center gap-8 px-2">
+  <div class="h-screen pt-2 md:pt-0 md:flex md:items-center md:justify-center gap-8 px-2">
     <div class="absolute top-1/2 flex justify-center">
       <ConfettiExplosion
         v-if="isSolved"

@@ -1,5 +1,5 @@
 <template>
-  <div class="h-fit mt-6 space-y-4">
+  <div class="h-fit mt-6 space-y-2">
     <div class="flex gap-2">
       <button
         class="font-medium text-gray-900 data-[mode=normal]:text-theme-600"

@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="`aspect-square min-w-12 md:min-w-22 p-0.5 lg:p-2 flex group relative items-center justify-center border border-gray-300 group${isAtBottomEdge ? ' border-b-gray-700' : ''}${isAtTopEdge ? ' border-t-gray-700' : ''}${isAtLeftEdge ? ' border-l-gray-700' : ''}${isAtRightEdge ? ' border-r-gray-700' : ''}${isFocused ? ' bg-theme-200' : ''}${focusedCellSharedUnitCount == 2 ? ' bg-theme-100' : ''}${focusedCellSharedUnitCount == 1 ? ' bg-theme-50' : ''}`"
+    :class="`aspect-square min-w-10 md:min-w-22 p-0.5 lg:p-2 flex group relative items-center justify-center border border-gray-300 group${isAtBottomEdge ? ' border-b-gray-700' : ''}${isAtTopEdge ? ' border-t-gray-700' : ''}${isAtLeftEdge ? ' border-l-gray-700' : ''}${isAtRightEdge ? ' border-r-gray-700' : ''}${isFocused ? ' bg-theme-200' : ''}${focusedCellSharedUnitCount == 2 ? ' bg-theme-100' : ''}${focusedCellSharedUnitCount == 1 ? ' bg-theme-50' : ''}`"
   >
     <div
       v-if="cell.isFilled()"
