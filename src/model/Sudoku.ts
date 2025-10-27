@@ -3,7 +3,7 @@ import SudokuUnit from "@/model/Unit";
 import Candidate from "@/model/Candidate";
 import { Group } from "@/model/Group";
 import { digits } from "@/util";
-import type { UnitType } from "@/types";
+import type { Step, UnitType } from "@/types";
 
 export default class Sudoku {
   private state: Array<Cell>;
@@ -158,14 +158,15 @@ export default class Sudoku {
     }
   }
 
-  // public applyStep(step: Step) {
-  //   if (step.type == "place") {
-  //     this.placeValueInCell(step.idx, step.value);
-  //   }
-  //   if (step.type == "eliminate") {
-  //     step.vals.forEach((val) => step.from.forEach((cell) => cell.removeCandidate(val)));
-  //   }
-  // }
+  // used for testing
+  public applyStep(step: Step) {
+    if (step.type == "place") {
+      this.placeValueInCell(step.place.getCell().getCellIdx(), step.place.getDigit());
+    }
+    if (step.type == "eliminate") {
+      step.candidates.forEach((cand) => cand.setState(false));
+    }
+  }
 
   public removeCandidateFromUnit(unitType: UnitType, unitIdx: number, value: number) {
     const unit = this.getUnit(unitType, unitIdx);

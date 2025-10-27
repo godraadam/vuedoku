@@ -10,7 +10,7 @@
       </p>
       <div class="flex items-center justify-between gap-2 pt-10">
         <RouterLink
-          :to="`/${difficulty}`"
+          to="/"
           class="text-center text-theme-600 py-2 cursor-pointer hover:text-theme-700 transition-colors"
         >
           Exit
@@ -25,6 +25,7 @@
             <ShareIcon v-else class="size-5 text-theme-600" />
           </button>
           <button
+            v-if="difficulty != 'custom'"
             class="bg-theme-600 md:min-w-32 flex justify-center items-center gap-2 text-white px-3 py-2 rounded-lg cursor-pointer hover:bg-theme-500 transition-colors"
             @click="onPlayAnother"
           >
