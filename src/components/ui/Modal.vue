@@ -10,7 +10,7 @@
       <div
         :class="
           cn(
-            'relative z-51 flex max-h-[95dvh] rounded-lg w-fit max-w-[95vw] py-6 px-8 flex-col overflow-auto bg-white shadow-lg ',
+            'relative z-51 max-h-[95dvh] rounded-lg w-fit max-w-[95vw] py-3 md:py-6 px-4 md:px-8 overflow-auto bg-white shadow-lg ',
             attrs.class ?? '',
           )
         "
@@ -36,6 +36,7 @@ const props = withDefaults(defineProps<{ isOpen: boolean; isDismissable?: boolea
 });
 const emits = defineEmits<{ close: [] }>();
 const attrs = useAttrs();
+defineOptions({ inheritAttrs: false });
 
 function handleClickOutside() {
   if (props.isDismissable) {

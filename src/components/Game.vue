@@ -86,7 +86,6 @@
       <MobileInput class="block md:hidden" @input="onMobileInput" />
     </div>
   </div>
-  <PausedModal :is-open="pauseModalOpen" @close="onTogglePause" />
   <GameEndModal :is-open="gameEndModelOpen" @close="gameEndModelOpen = false" />
   <SettingsModal :is-open="settingsModalOpen" @close="onToggleSettings(false)" />
   <ShareModal :is-open="shareModalOpen" @close="onToggleShare(false)" />
@@ -110,7 +109,6 @@ import HeartOutlineIcon from "@/components/ui/icons/heart-outline.svg";
 import HintIcon from "@/components/ui/icons/lightbulb.svg";
 import HintIconFilled from "@/components/ui/icons/lightbulb-filled.svg";
 import ChevronLeftIcon from "@/components/ui/icons/chevron-left.svg";
-import PausedModal from "@/components/PausedModal.vue";
 import ShareIcon from "@/components/ui/icons/share.svg";
 import { useKeyboardEvent } from "@/composables/useKeyboardEvent";
 import GameEndModal from "@/components/GameEndModal.vue";
@@ -119,7 +117,6 @@ import SettingsModal from "@/components/SettingsModal.vue";
 import ShareModal from "@/components/ShareModal.vue";
 import MobileInput from "@/components/MobileInput.vue";
 
-const pauseModalOpen = ref(false);
 const gameEndModelOpen = ref(false);
 const settingsModalOpen = ref(false);
 const shareModalOpen = ref(false);
@@ -166,7 +163,6 @@ function onToggleLike() {
 
 function onTogglePause() {
   running.value = !running.value;
-  pauseModalOpen.value = !pauseModalOpen.value;
 }
 
 function onToggleSettings(open: boolean) {
@@ -180,6 +176,9 @@ function onToggleShare(open: boolean) {
 }
 
 function onMobileInput(type: "remove" | "place" | "eliminate", digit: number) {
+  if (!running.value) {
+    return;
+  }
   if (type == "eliminate") {
     const candidate = focusedCell.value.getCandidate(digit);
     return sudoku.value.setCandidate(candidate, !candidate.isSet());

@@ -1,11 +1,26 @@
 <template>
-  <div class="grid grid-cols-9 grid-rows-9 w-full">
+  <div v-if="running" class="grid grid-cols-9 grid-rows-9 w-full">
     <Cell
       v-for="cell of cells"
       :key="cell.getCellIdx()"
       :cell
       @mouseenter="focusedCell = cell"
       @click="focusedCell = cell"
+    />
+  </div>
+  <div v-else class="grid grid-cols-9 grid-rows-9 w-full relative">
+    <div
+      v-for="i of cells.length"
+      :key="i"
+      class="aspect-square min-w-10 md:min-w-22 p-0.5 lg:p-2 border border-transparent data-[top=true]:border-t-gray-500 data-[left=true]:border-l-gray-500 data-[bottom=true]:border-b-gray-500 data-[right=true]:border-r-gray-500"
+      :data-top="Math.floor((i - 1) / 9) == 0"
+      :data-left="Math.floor((i - 1) % 9) == 0"
+      :data-bottom="Math.floor((i - 1) / 9) == 8"
+      :data-right="Math.floor((i - 1) % 9) == 8"
+    />
+    <PauseIcon
+      class="absolute text-gray-900 size-32 left-1/2 -translate-x-1/2 -translate-y-1/2 top-1/2"
+      @click="running = true"
     />
   </div>
 </template>
@@ -16,9 +31,10 @@ import { computed } from "vue";
 import Cell from "@/components/Cell.vue";
 import { useKeyboardEvent } from "@/composables/useKeyboardEvent";
 import useState from "@/composables/useState";
+import PauseIcon from "@/components/ui/icons/pause.svg";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const { focusedCell, sudoku, sudokuSolver: _ } = useState();
+const { focusedCell, sudoku, sudokuSolver: _, running } = useState();
 
 const cells = computed(() => sudoku.value.getCells());
 

@@ -1,6 +1,6 @@
 <template>
-  <Modal :is-open @close="emits('close')">
-    <div class="w-[480px] h-fit overflow-visible">
+  <Modal :is-open class="w-full max-w-lg mx-2" @close="emits('close')">
+    <div class="h-fit overflow-visible">
       <h1 class="text-3xl font-medium pb-4">Congratulations!</h1>
       <p class="text-gray-900 pb-5">
         You solved a{{ difficulty == "easy" ? "n " : " " }}
@@ -8,11 +8,6 @@
         <span class="text-theme-600">{{ time }}</span>
         {{ hintsUsed > 0 ? `using ${hintsUsed} hints` : "" }}!
       </p>
-      <!-- <h2 class="font-medium text-gray-900 pt-4">Share your results</h2>
-      <div class="pt-2 flex items-center gap-2">
-        <button>Copy link to this sudoku</button>
-        <button>Challenge a friend</button>
-      </div> -->
       <div class="flex items-center justify-between gap-2 pt-10">
         <RouterLink
           :to="`/${difficulty}`"
@@ -22,7 +17,7 @@
         </RouterLink>
         <div class="flex gap-2">
           <button
-            class="border border-theme-600 min-w-32 flex justify-center items-center gap-2 text-theme-600 px-3 py-2 rounded-lg cursor-pointer hover:bg-theme-50 transition-colors"
+            class="border border-theme-600 md:min-w-32 flex justify-center items-center gap-2 text-theme-600 px-3 py-2 rounded-lg cursor-pointer hover:bg-theme-50 transition-colors"
             @click="onShare"
           >
             {{ linkCopied ? "Link copied!" : "Share" }}
@@ -30,7 +25,7 @@
             <ShareIcon v-else class="size-5 text-theme-600" />
           </button>
           <button
-            class="bg-theme-600 min-w-32 flex justify-center items-center gap-2 text-white px-3 py-2 rounded-lg cursor-pointer hover:bg-theme-500 transition-colors"
+            class="bg-theme-600 md:min-w-32 flex justify-center items-center gap-2 text-white px-3 py-2 rounded-lg cursor-pointer hover:bg-theme-500 transition-colors"
             @click="onPlayAnother"
           >
             Play another
