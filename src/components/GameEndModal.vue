@@ -5,8 +5,8 @@
       <p class="text-gray-900 pb-5">
         You solved a{{ difficulty == "easy" ? "n " : " " }}
         <span class="text-theme-600">{{ difficulty }}</span> sudoku in
-        <span class="text-theme-600">{{ time }}</span
-        >!
+        <span class="text-theme-600">{{ time }}</span>
+        {{ hintsUsed > 0 ? `using ${hintsUsed} hints` : "" }}!
       </p>
       <!-- <h2 class="font-medium text-gray-900 pt-4">Share your results</h2>
       <div class="pt-2 flex items-center gap-2">
@@ -53,7 +53,7 @@ import ShareIcon from "@/components/ui/icons/share.svg";
 import CopiedIcon from "@/components/ui/icons/check-copied.svg";
 import { getRandomSudoku } from "@/util";
 
-const { difficulty, time } = useState();
+const { difficulty, time, hintsUsed } = useState();
 const router = useRouter();
 
 defineProps<{ isOpen: boolean }>();

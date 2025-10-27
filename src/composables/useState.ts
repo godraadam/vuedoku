@@ -22,6 +22,9 @@ function useState() {
 
   const autoCandidates = ref(false);
   const autoHint = ref(false);
+  const showHint = ref(false);
+  const hintsUsed = ref(0);
+
   const running = ref(true);
   const { time, reset: resetTimer } = useTimer(running);
 
@@ -54,10 +57,29 @@ function useState() {
     sudoku.value = new Sudoku(values.value, { autoCandidate: true });
     resetTimer();
     running.value = true;
-    console.log(running.value);
+    hintsUsed.value = 0;
   }
 
   watch(values, reset);
+  watch(nextStep, () => {
+    if (!autoHint.value) {
+      showHint.value = false;
+    } else {
+      hintsUsed.value += 1;
+    }
+  });
+
+  watch(autoHint, () => {
+    if (autoHint.value) {
+      showHint.value = true;
+      autoCandidates.value = true;
+    }
+    if (!autoHint.value) {
+      showHint.value = false;
+    }
+  });
+
+  watch(showHint, () => (hintsUsed.value += showHint.value ? 1 : 0));
 
   return {
     difficulty,
@@ -72,6 +94,8 @@ function useState() {
     nextStep,
     autoCandidates,
     autoHint,
+    showHint,
+    hintsUsed,
     running,
     time,
     input,

@@ -1,6 +1,11 @@
 <template>
   <div
-    :class="cn('text-xs md:text-base font-thin text-transparent data-[on=true]:text-gray-500 data-[on=true]:font-extralight group-hover:text-gray-500 data-[on=true]:group-hover:text-gray-900 data-[place=true]:bg-theme-500 data-[place=true]:group-hover:text-white data-[place=true]:text-white data-[participant=true]:border border-gray-500 rounded-full flex justify-center items-center data-[remove=true]:font-medium cursor-pointer hover:text-gray-900 transition-colors duration-100 ease-out', canBeRemoved && 'crossed')"
+    :class="
+      cn(
+        'text-xs md:text-base font-thin text-transparent data-[on=true]:text-gray-500 data-[on=true]:font-extralight group-hover:text-gray-500 data-[on=true]:group-hover:text-gray-900 data-[place=true]:bg-theme-500 data-[place=true]:group-hover:text-white data-[place=true]:text-white data-[participant=true]:border border-gray-500 rounded-full flex justify-center items-center data-[remove=true]:font-medium cursor-pointer hover:text-gray-900 transition-colors duration-100 ease-out',
+        canBeRemoved && 'crossed',
+      )
+    "
     :data-on="isOn"
     :data-place="canBePlaced"
     :data-participant="isParticipant"
@@ -30,21 +35,21 @@ const {
   candidateToPlace,
   candidatesToRemove,
   eliminationParticipants,
-  autoHint,
+  showHint,
   sudoku,
   autoCandidates,
 } = useState();
 
 const canBeRemoved = computed(
-  () => autoHint.value && candidatesToRemove.value.some((c) => c.equals(props.candidate)),
+  () => showHint.value && candidatesToRemove.value.some((c) => c.equals(props.candidate)),
 );
 
 const canBePlaced = computed(
-  () => autoHint.value && candidateToPlace.value?.equals(props.candidate),
+  () => showHint.value && candidateToPlace.value?.equals(props.candidate),
 );
 
 const isParticipant = computed(
-  () => autoHint.value && eliminationParticipants.value.some((p) => p.equals(props.candidate)),
+  () => showHint.value && eliminationParticipants.value.some((p) => p.equals(props.candidate)),
 );
 
 function handleClick(e: PointerEvent) {
