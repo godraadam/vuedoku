@@ -1,14 +1,14 @@
 <template>
   <div
-    :class="`size-10 md:size-22 p-0.5 lg:p-2 flex group relative items-center justify-center border border-gray-300 group${isAtBottomEdge ? ' border-b-gray-700' : ''}${isAtTopEdge ? ' border-t-gray-700' : ''}${isAtLeftEdge ? ' border-l-gray-700' : ''}${isAtRightEdge ? ' border-r-gray-700' : ''}${isFocused ? ' bg-theme-200' : ''}${focusedCellSharedUnitCount == 2 ? ' bg-theme-100' : ''}${focusedCellSharedUnitCount == 1 ? ' bg-theme-50' : ''}`"
+    :class="`aspect-square min-w-12 md:min-w-22 p-0.5 lg:p-2 flex group relative items-center justify-center border border-gray-300 group${isAtBottomEdge ? ' border-b-gray-700' : ''}${isAtTopEdge ? ' border-t-gray-700' : ''}${isAtLeftEdge ? ' border-l-gray-700' : ''}${isAtRightEdge ? ' border-r-gray-700' : ''}${isFocused ? ' bg-theme-200' : ''}${focusedCellSharedUnitCount == 2 ? ' bg-theme-100' : ''}${focusedCellSharedUnitCount == 1 ? ' bg-theme-50' : ''}`"
   >
     <div
       v-if="cell.isFilled()"
-      class="text-2sxl md:text-5xl font-semibold"
+      class="text-2xl md:text-5xl font-semibold"
       :class="cell.isGiven() ? 'text-gray-900' : 'text-theme-600'"
     >
       {{ cell.getValue() + 1 }}
-      <div v-if="isConflicting" class="absolute bottom-2 left-2 bg-red-400 rounded-full size-4" />
+      <div v-if="isConflicting" class="absolute bottom-2 left-2 bg-red-400 rounded-full size-2 md:size-4" />
     </div>
     <div v-else class="h-full w-full grid grid-cols-3 grid-rows-3 gap-0.5">
       <Candidate

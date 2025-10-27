@@ -1,5 +1,5 @@
 <template>
-  <div class="h-screen w-screen flex items-center justify-center gap-8 px-2">
+  <div class="h-screen pt-20 md:pt-0 md:flex md:items-center md:justify-center gap-8 px-2">
     <div class="absolute top-1/2 flex justify-center">
       <ConfettiExplosion
         v-if="isSolved"
@@ -17,13 +17,11 @@
       <div
         class="text-gray-900 font-medium flex md:gap-4 min-h-6 w-full justify-between items-center"
       >
-        <IconButton class="pl-0" @click="router.push(`/${difficulty}`)"
-          ><ChevronLeftIcon class="size-5" />Back</IconButton
-        >
-        <div v-if="showHint" class="font-light text-sm">
+        <IconButton class="pl-0" @click="onExit"><ChevronLeftIcon class="size-5" />Back</IconButton>
+        <div v-if="showHint" class="font-light text-sm hidden md:block">
           {{ nextStep ? nextStep.reason : isSolved ? "Solved" : "No idea fam" }}
         </div>
-        <div class="flex items-center gap-3">
+        <div class="flex items-center md:gap-3">
           <div :class="`text-${difficultyColorMap[difficulty]}-700`">
             {{ difficultyNameMap[difficulty] }}
           </div>
@@ -34,18 +32,26 @@
                 v-else
                 class="size-5"
             /></IconButton>
-            <template #popper>{{ running ? "Pause Game" : "Resume Game" }}</template>
+            <template #popper
+              >{{ running ? "Pause Game" : "Resume Game" }}
+              <span class="text-sm font-mono text-gray-400"> [Spacebar]</span></template
+            >
           </Tooltip>
           <Tooltip>
             <IconButton @click="reset"><ResetIcon class="size-5" /> </IconButton>
-            <template #popper>Reset puzzle</template>
+            <template #popper
+              >Reset puzzle <span class="text-sm font-mono text-gray-400">[Cmd+R]</span></template
+            >
           </Tooltip>
           <Tooltip>
             <IconButton @click="onToggleLike">
               <HeartFilledIcon v-if="isLiked" class="size-5 text-theme-500" />
               <HeartOutlineIcon v-else class="size-5" />
             </IconButton>
-            <template #popper>{{ isLiked ? "Unlike" : "Like" }}</template>
+            <template #popper
+              >{{ isLiked ? "Unlike" : "Like" }}
+              <span class="text-sm font-mono text-gray-400"> [Cmd+L]</span></template
+            >
           </Tooltip>
 
           <Tooltip>
@@ -55,16 +61,18 @@
                 class="size-5 text-theme-500"
               />
             </IconButton>
-            <template #popper>Get a hint</template>
+            <template #popper
+              >Get a hint <span class="text-sm font-mono text-gray-400"> [Cmd+H]</span></template
+            >
           </Tooltip>
           <Tooltip>
-            <IconButton @click="onTogglePause">
+            <IconButton @click="onToggleShare(true)">
               <ShareIcon class="size-5" />
             </IconButton>
             <template #popper>Share Puzzle</template>
           </Tooltip>
           <Tooltip>
-            <IconButton @click="onTogglePause">
+            <IconButton @click="onToggleSettings(true)">
               <SettingsIcon class="size-5" />
             </IconButton>
             <template #popper>Open Settings</template>
@@ -72,10 +80,16 @@
         </div>
       </div>
       <Sudoku />
+      <div v-if="showHint" class="font-light text-sm md:hidden">
+        {{ nextStep ? nextStep.reason : isSolved ? "Solved" : "No idea fam" }}
+      </div>
+      <MobileInput class="block md:hidden" @input="onMobileInput" />
     </div>
   </div>
   <PausedModal :is-open="pauseModalOpen" @close="onTogglePause" />
   <GameEndModal :is-open="gameEndModelOpen" @close="gameEndModelOpen = false" />
+  <SettingsModal :is-open="settingsModalOpen" @close="onToggleSettings(false)" />
+  <ShareModal :is-open="shareModalOpen" @close="onToggleShare(false)" />
 </template>
 
 <script setup lang="ts">
@@ -101,12 +115,28 @@ import ShareIcon from "@/components/ui/icons/share.svg";
 import { useKeyboardEvent } from "@/composables/useKeyboardEvent";
 import GameEndModal from "@/components/GameEndModal.vue";
 import { difficultyColorMap, difficultyNameMap } from "@/consts";
+import SettingsModal from "@/components/SettingsModal.vue";
+import ShareModal from "@/components/ShareModal.vue";
+import MobileInput from "@/components/MobileInput.vue";
 
 const pauseModalOpen = ref(false);
 const gameEndModelOpen = ref(false);
+const settingsModalOpen = ref(false);
+const shareModalOpen = ref(false);
 
-const { isSolved, nextStep, running, time, reset, input, difficulty, showHint, autoHint } =
-  useState();
+const {
+  isSolved,
+  nextStep,
+  running,
+  time,
+  reset,
+  input,
+  difficulty,
+  showHint,
+  autoHint,
+  sudoku,
+  focusedCell,
+} = useState();
 
 const router = useRouter();
 
@@ -139,6 +169,27 @@ function onTogglePause() {
   pauseModalOpen.value = !pauseModalOpen.value;
 }
 
+function onToggleSettings(open: boolean) {
+  running.value = !open;
+  settingsModalOpen.value = open;
+}
+
+function onToggleShare(open: boolean) {
+  running.value = !open;
+  shareModalOpen.value = open;
+}
+
+function onMobileInput(type: "remove" | "place" | "eliminate", digit: number) {
+  if (type == "eliminate") {
+    const candidate = focusedCell.value.getCandidate(digit);
+    return sudoku.value.setCandidate(candidate, !candidate.isSet());
+  } else if (type == "place") {
+    sudoku.value.placeValueInCell(focusedCell.value.getCellIdx(), digit);
+  } else {
+    sudoku.value.removeValueFromCell(focusedCell.value.getCellIdx());
+  }
+}
+
 watch(isSolved, () => {
   if (isSolved.value) {
     running.value = false;
@@ -146,9 +197,21 @@ watch(isSolved, () => {
   }
 });
 
+function onExit() {
+  router.push("/");
+}
+
 useKeyboardEvent((e) => {
   if (e.code == "Space") {
     onTogglePause();
+  } else if (e.key == "h" && e.metaKey) {
+    showHint.value = true;
+  } else if (e.key == "l" && e.metaKey) {
+    onToggleLike();
+  } else if (e.key == "r" && e.metaKey) {
+    reset();
+  } else if (e.key == "w" && e.metaKey) {
+    onExit();
   }
 });
 </script>

@@ -1,14 +1,12 @@
 <template>
-  <div class="w-full flex justify-center">
-    <div class="grid grid-cols-9 grid-rows-9 max-w-fit">
-      <Cell
-        v-for="cell of cells"
-        :key="cell.getCellIdx()"
-        :cell
-        @mouseenter="focusedCell = cell"
-        @click="focusedCell = cell"
-      />
-    </div>
+  <div class="grid grid-cols-9 grid-rows-9 w-full">
+    <Cell
+      v-for="cell of cells"
+      :key="cell.getCellIdx()"
+      :cell
+      @mouseenter="focusedCell = cell"
+      @click="focusedCell = cell"
+    />
   </div>
 </template>
 
@@ -20,7 +18,7 @@ import { useKeyboardEvent } from "@/composables/useKeyboardEvent";
 import useState from "@/composables/useState";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const { focusedCell, sudoku, reset, sudokuSolver: _ } = useState();
+const { focusedCell, sudoku, sudokuSolver: _ } = useState();
 
 const cells = computed(() => sudoku.value.getCells());
 
@@ -48,9 +46,6 @@ useKeyboardEvent(
     }
     if (e.key == "Backspace" && !focusedCell.value.isGiven() && focusedCell.value.isFilled()) {
       return sudoku.value.removeValueFromCell(focusedCell.value.getCellIdx());
-    }
-    if (e.key == "r" && e.metaKey) {
-      return reset();
     }
     if (e.key == "ArrowRight") {
       if (e.metaKey) {

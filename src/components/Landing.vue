@@ -1,6 +1,10 @@
 <template>
   <main class="h-screen w-screen flex items-center justify-center px-3">
-    <div class="flex flex-col gap-8 w-md">
+    <div class="flex flex-col gap-8 w-lg">
+      <h1 class="text-5xl font-bold pb-6">
+        Sudoku by
+        <a href="https://godraadam.com" class="hover:text-sky-500 hover:underline transition-colors">godraadam</a>
+      </h1>
       <div class="flex flex-col gap-2">
         <label for="input" class="text-sm font-medium text-gray-900">Play random sudoku</label>
         <div class="grid grid-cols-2 gap-2">
@@ -26,7 +30,7 @@
           v-model="sudokuString"
           id="input"
           :data-valid="!blurred || isValid"
-          placeholder="Ex. 90080100...109000603"
+          placeholder="Ex. 0802004005700001000...00003000018007009050"
           class="rounded-lg w-full px-4 py-2 border border-gray-600 text-gray-900 transition duration-300 placeholder:text-gray-400 focus:border-gray-900 data-[valid=false]:border-red-500 focus:shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05),0px_0px_0px_4px_#F5F5F5] focus:outline-none"
           @blur="blurred = true"
         />
@@ -49,7 +53,6 @@ import { useRouter } from "vue-router";
 import PlayIcon from "@/components/ui/icons/play.svg";
 import { difficulties, difficultyColorMap, difficultyNameMap } from "@/consts";
 import type { Difficulty } from "@/types";
-import { getRandomSudoku } from "@/util";
 
 const router = useRouter();
 const sudokuString = ref("");
@@ -69,10 +72,10 @@ const difficultyOptions = difficulties
 
 async function onPlay(difficulty: Difficulty, sudokuString?: string) {
   if (difficulty == "custom" && sudokuString) {
-    return await router.replace(`custom/${sudokuString}`);
+    return await router.push(`custom/${sudokuString}`);
+  } else {
+    return await router.push(`/${difficulty}`);
   }
-  const randomSudoku = await getRandomSudoku(difficulty);
-  return await router.replace(`${difficulty}/${randomSudoku}`);
 }
 
 onMounted(() => console.log("Welcome to my sudoku page!"));

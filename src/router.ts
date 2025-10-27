@@ -1,9 +1,8 @@
-import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHistory, RouterView } from "vue-router";
 
 import Game from "@/components/Game.vue";
 import Landing from "@/components/Landing.vue";
-import ThemeProvider from "@/components/ThemeProvider.vue";
-import Root from "@/components/Root.vue";
+import DifficultyLayout from "@/components/DifficultyLayout.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -11,12 +10,12 @@ const router = createRouter({
     {
       path: "/",
       children: [
-        { path: "", component: Root },
+        { path: "", component: Landing },
         {
           path: "/:difficulty",
-          component: ThemeProvider,
+          component: DifficultyLayout,
           children: [
-            { path: "", component: Landing },
+            { path: "", component: RouterView },
             { path: ":input", component: Game },
           ],
         },
