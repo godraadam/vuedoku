@@ -2,8 +2,12 @@
   <div
     :class="
       cn(
-        'text-xs md:text-base pointer-events-none md:pointer-events-auto font-thin text-transparent data-[on=true]:text-gray-500 data-[on=true]:font-light group-hover:text-gray-500 data-[on=true]:group-hover:text-gray-900 data-[place=true]:bg-theme-500 data-[place=true]:group-hover:text-white data-[place=true]:text-white data-[participant=true]:border border-gray-500 rounded-full flex justify-center items-center cursor-pointer hover:text-gray-900 transition-colors duration-100 ease-out',
+        'text-xs md:text-base pointer-events-none md:pointer-events-auto font-thin text-transparent group-hover:text-gray-500 border-gray-500 rounded-full flex justify-center items-center cursor-pointer hover:text-gray-900 transition-colors duration-100 ease-out',
+        isOn && 'text-gray-500 font-light group-hover:text-gray-900',
         canBeRemoved && 'crossed',
+        canBePlaced && 'text-white bg-theme-600 group-hover:text-white hover:text-white',
+        isHighLighted && 'text-theme-600 font-bold',
+        isParticipant && 'border',
       )
     "
     :data-on="isOn"
@@ -31,10 +35,20 @@ const isOn = computed(() =>
     ? props.candidate.isSet()
     : sudoku.value.getUserSetCandidates().get(props.candidate),
 );
+
+const isHighLighted = computed(
+  () =>
+    !canBePlaced.value &&
+    !canBeRemoved.value &&
+    props.candidate.isSet() &&
+    highlightedDigit.value == props.candidate.getDigit(),
+);
+
 const {
   candidateToPlace,
   candidatesToRemove,
   eliminationParticipants,
+  highlightedDigit,
   showHint,
   sudoku,
   autoCandidates,

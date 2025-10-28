@@ -8,21 +8,22 @@ export type GraphElement = { candidate: Candidate; type: LinkType } | undefined;
 export class InferenceGraph {
   private sudoku: Sudoku;
   private nodes: Array<Candidate>;
+  private loop: boolean;
   private inferenceGraph: Array<Array<GraphElement>> = [];
 
-  constructor(sudoku: Sudoku) {
+  constructor(sudoku: Sudoku, loop?: boolean) {
     this.sudoku = sudoku;
     this.inferenceGraph = Array.from({ length: 81 * 9 }, () => Array(81 * 9).fill(undefined));
     this.nodes = [];
+    this.loop = loop ?? false;
   }
 
   public build(nodes?: Array<Candidate>) {
     this.nodes = nodes ?? this.sudoku.getAllSetCandidates();
-
+    this.inferenceGraph = Array.from({ length: 81 * 9 }, () => Array(81 * 9).fill(undefined));
     for (const [candA, candB] of kCombinations(this.nodes, 2)) {
       const cellA = candA.getCell();
       const cellB = candB.getCell();
-
       const digitA = candA.getDigit();
       const digitB = candB.getDigit();
       if (cellA.equals(cellB)) {
@@ -60,12 +61,17 @@ export class InferenceGraph {
 
   public getLinks(cand: Candidate, type: LinkType) {
     return this.inferenceGraph[cand.getCandidateIdx()]
-      .filter(
-        (it) =>
+      .filter((it) => {
+        if (it && !it.candidate.isSet()) {
+          console.log(it.candidate);
+        }
+        return (
           it != undefined &&
           !it.candidate.equals(cand) &&
-          (type == "strong" ? it.type == "strong" : true),
-      )
+          it.candidate.isSet() &&
+          (type == "strong" ? it.type == "strong" : true)
+        );
+      })
       .map((it) => it!.candidate);
   }
 
@@ -132,11 +138,25 @@ export class InferenceGraph {
 
       const nextLinks = this.getLinks(last.candidate, nextType);
       for (const next of nextLinks) {
-        if (path.some((p) => p.candidate.equals(next))) continue;
+        if (path.some((p) => p.candidate.equals(next))) {
+          if (!this.loop) {
+            continue;
+          }
+          const newPath = [...path, { candidate: next, type: nextType }];
+          if (
+            next.equals(path.at(0)!.candidate) &&
+            newPath.length >= minLength &&
+            newPath.length % 2 == 1
+          ) {
+            yield newPath;
+          }
+          continue;
+        }
 
         const newPath = [...path, { candidate: next, type: nextType }];
 
         if (
+          !this.loop &&
           newPath.length >= minLength &&
           next.getDigit() == start.getDigit() &&
           newPath.length % 2 == 0

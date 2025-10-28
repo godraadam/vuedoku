@@ -110,7 +110,7 @@ export default class Cell {
   }
 
   public getSetCandidates() {
-    return this.candidates.filter((c) => c.isSet() == true);
+    return this.candidates.filter((c) => c.isSet());
   }
 
   public hasSameCandidatesAs(cell: Cell) {

@@ -1,12 +1,6 @@
 <template>
   <div v-if="running || isSolved" class="grid grid-cols-9 grid-rows-9 w-full">
-    <Cell
-      v-for="cell of cells"
-      :key="cell.getCellIdx()"
-      :cell
-      @mouseenter="focusedCell = cell"
-      @click="focusedCell = cell"
-    />
+    <Cell v-for="cell of cells" :key="cell.getCellIdx()" :cell />
   </div>
   <div v-else class="grid grid-cols-9 grid-rows-9 w-full relative">
     <div
@@ -26,17 +20,31 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, watch } from "vue";
 
 import Cell from "@/components/Cell.vue";
 import { useKeyboardEvent } from "@/composables/useKeyboardEvent";
 import useState from "@/composables/useState";
 import PauseIcon from "@/components/ui/icons/pause.svg";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const { focusedCell, sudoku, sudokuSolver: _, running, isSolved } = useState();
+const {
+  focusedCell,
+  sudoku,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  sudokuSolver: _,
+  running,
+  isSolved,
+  autoHighlight,
+  highlightedDigit,
+} = useState();
 
 const cells = computed(() => sudoku.value.getCells());
+
+watch(focusedCell, () => {
+  if (autoHighlight.value) {
+    highlightedDigit.value = focusedCell.value.getValue();
+  }
+});
 
 useKeyboardEvent(
   (e) => {

@@ -1,5 +1,5 @@
 import type Cell from "@/model/Cell";
-import { getKCombinations, kCombinations } from "@/util";
+import { getKCombinations } from "@/util";
 
 export class Group {
   protected _cells: Array<Cell>;
@@ -18,6 +18,12 @@ export class Group {
 
   public getCandidates() {
     return this._cells.map((cell) => cell.getCandidates()).flat();
+  }
+
+  public getSetCandidatesOfDigit(digit: number) {
+    return this._cells
+      .map((cell) => cell.getSetCandidates().filter((it) => it.getDigit() == digit))
+      .flat();
   }
 
   public getSetCandidates() {
@@ -53,33 +59,12 @@ export class Group {
     return this._cells.filter((cell) => cell.hasCandidate(digit));
   }
 
-  public isLockedSet(
-    options: { checkPairwiseVisibility: boolean } = { checkPairwiseVisibility: true },
-  ) {
-    if (this.getSize() != this.getCandidateCount()) {
-      return false;
-    }
-    // if group is aleady known to be in one unit, we can skip this and save some time
-    if (options.checkPairwiseVisibility) {
-      for (const [cellA, cellB] of kCombinations(this._cells, 2)) {
-        if (!cellA.canSee(cellB)) {
-          return false;
-        }
-      }
-    }
-    return true;
+  public isLockedSet() {
+    return this.getSize() == this.getCandidateCount();
   }
 
   public isAlmostLockedSet() {
-    if (this.getSize() != this.getCandidateCount() - 1) {
-      return false;
-    }
-    for (const [cellA, cellB] of kCombinations(this._cells, 2)) {
-      if (!cellA.canSee(cellB)) {
-        return false;
-      }
-    }
-    return true;
+    return this.getSize() != this.getCandidateCount() - 1;
   }
 
   public includesCell(cell: Cell) {

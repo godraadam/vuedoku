@@ -23,6 +23,7 @@ function useState() {
   const autoCandidates = ref(false);
   const autoHint = ref(false);
   const showHint = ref(false);
+  const autoHighlight = ref(false);
   const hintsUsed = ref(0);
 
   const running = ref(true);
@@ -52,6 +53,7 @@ function useState() {
   const isSolved = computed(() => sudoku.value.isProperSolved());
   const nextStep = computed(() => sudokuSolver.value.getNextStep());
   const focusedCell = ref(sudoku.value.getCellByIdx(0)) as Ref<Cell>;
+  const highlightedDigit = ref<number>();
 
   function reset() {
     sudoku.value = new Sudoku(values.value, { autoCandidate: true });
@@ -94,6 +96,8 @@ function useState() {
     nextStep,
     autoCandidates,
     autoHint,
+    autoHighlight,
+    highlightedDigit,
     showHint,
     hintsUsed,
     running,

@@ -11,6 +11,7 @@ import { XChainResolver } from "@/model/resolvers/XChain";
 import { XYChainResolver } from "@/model/resolvers/XYChain";
 import { AIC } from "@/model/resolvers/AIC";
 import type { Step } from "@/types";
+import { XCycleResolver } from "./resolvers/XCycles";
 
 export class SudokuSolver {
   private sudoku: Sudoku;
@@ -38,6 +39,7 @@ export class SudokuSolver {
       new Wing(this.sudoku, 4),
       new CPRResolver(this.sudoku),
       new XChainResolver(this.sudoku),
+      new XCycleResolver(this.sudoku),
       new XYChainResolver(this.sudoku),
       new FishResolver(this.sudoku, 3),
       new FishResolver(this.sudoku, 4),

@@ -27,7 +27,7 @@ export class NakedTupleResolver extends Resolver {
           const cellGroup = new Group(cells);
 
           // if candidate set size of group == N => Naked N-tuple
-          if (cellGroup.isLockedSet({ checkPairwiseVisibility: false })) {
+          if (cellGroup.isLockedSet()) {
             // naked singles can placed
             const value = cellGroup.getCandidateSet().at(0)!;
             if (cellGroup.getSize() == 1) {

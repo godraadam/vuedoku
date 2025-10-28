@@ -67,9 +67,7 @@
             >
           </Tooltip>
           <Tooltip delay="1000">
-            <DropDownContext
-              :close-on-select="false"
-            >
+            <DropDownContext :close-on-select="false">
               <DropDownTrigger>
                 <IconButton>
                   <ShareIcon class="size-5" />
@@ -79,7 +77,9 @@
                 <DropDownItem class="whitespace-nowrap text-sm">
                   <CopyIcon v-if="!linkCopied" class="size-5 text-gray-900" />
                   <CoypCheckIcon v-else class="size-5 text-theme-600" />
-                  <button class="w-full text-left" @click="onCopy('original')">Copy link to puzzle</button></DropDownItem
+                  <button class="w-full text-left" @click="onCopy('original')">
+                    Copy link to puzzle
+                  </button></DropDownItem
                 >
                 <DropDownItem class="whitespace-nowrap text-sm w-full"
                   ><CopyIcon v-if="!currentsStateLinkCopied" class="size-5 text-gray-900" />
@@ -118,6 +118,18 @@
                       class="size-4 accent-theme-600 rounded-lg"
                       id="auto-hint"
                     /><label for="auto-hint" class="text-gray-900 text-sm w-full">Auto Hints</label>
+                  </div></DropDownItem
+                >
+                <DropDownItem class="whitespace-nowrap text-sm"
+                  ><div class="flex gap-2 items-center w-full">
+                    <input
+                      v-model="autoHighlight"
+                      type="checkbox"
+                      class="size-4 accent-theme-600 rounded-lg"
+                      id="auto-highlight"
+                    /><label for="auto-highlight" class="text-gray-900 text-sm w-full"
+                      >Auto Highlight</label
+                    >
                   </div></DropDownItem
                 >
               </DropDownContent>
@@ -178,6 +190,7 @@ const {
   difficulty,
   showHint,
   autoHint,
+  autoHighlight,
   autoCandidates,
   sudoku,
   focusedCell,

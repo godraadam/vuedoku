@@ -1,11 +1,14 @@
 <template>
   <div
     :class="`aspect-square min-w-10 md:min-w-22 p-0.5 lg:p-2 flex group relative items-center justify-center border border-gray-300 group${isAtBottomEdge ? ' border-b-gray-700' : ''}${isAtTopEdge ? ' border-t-gray-700' : ''}${isAtLeftEdge ? ' border-l-gray-700' : ''}${isAtRightEdge ? ' border-r-gray-700' : ''}${isFocused ? ' bg-theme-200' : ''}${focusedCellSharedUnitCount == 2 ? ' bg-theme-100' : ''}${focusedCellSharedUnitCount == 1 ? ' bg-theme-50' : ''}`"
+    @mouseenter="focusedCell = cell"
+    @click="focusedCell = cell"
   >
     <div
       v-if="cell.isFilled()"
       class="text-2xl md:text-5xl font-semibold h-full w-full flex items-center justify-center"
       :class="cell.isGiven() ? 'text-gray-900' : 'text-theme-600'"
+      @dblclick="handleDoubleClick"
     >
       {{ cell.getValue() + 1 }}
       <div
@@ -33,7 +36,7 @@ const props = defineProps<{
   cell: CellModel;
 }>();
 
-const { focusedCell, conflictingCells } = useState();
+const { focusedCell, conflictingCells, highlightedDigit } = useState();
 
 const isAtLeftEdge = computed(() => props.cell.getColIdx() % 3 == 0);
 const isAtRightEdge = computed(() => props.cell.getColIdx() == 8);
@@ -51,4 +54,8 @@ const focusedCellSharedUnitCount = computed(() =>
     0,
   ),
 );
+
+function handleDoubleClick() {
+  highlightedDigit.value = props.cell.getValue();
+}
 </script>
