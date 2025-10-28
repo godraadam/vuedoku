@@ -1,5 +1,5 @@
 import type Cell from "@/model/Cell";
-import { kCombinations } from "@/util";
+import { getKCombinations, kCombinations } from "@/util";
 
 export class Group {
   protected _cells: Array<Cell>;
@@ -90,12 +90,17 @@ export class Group {
     return new Group(this._cells.filter((cell) => group.includesCell(cell)));
   }
 
-  public getRestrictedCommons(group: Group) {
-    if (!this.isAlmostLockedSet() || group.isAlmostLockedSet()) {
-      return [];
+  public getNonRestrictedCommons() {
+    const candidates = this.getCandidateSet();
+    const nrcs = [];
+    for (const digit of candidates) {
+      // find cells with candidate
+      const cells = this._cells.filter((cell) => cell.hasCandidate(digit));
+      if (getKCombinations(cells, 2).some(([cellA, cellB]) => !cellA.canSee(cellB))) {
+        nrcs.push(digit);
+      }
     }
-    // need to develop understanding :))
-    return [];
+    return nrcs;
   }
 
   public *cells() {

@@ -6,10 +6,10 @@ import { FishResolver } from "@/model/resolvers/Fish";
 import { PointingCandidates } from "@/model/resolvers/PointingCandidates";
 import { ClaimingCandidates } from "@/model/resolvers/ClaimingCandidates";
 import { CPRResolver } from "@/model/resolvers/ChuteRemotePair";
-import { XYWing } from "@/model/resolvers/XYWing";
-import { XYZWing } from "@/model/resolvers/XYZWing";
+import { Wing } from "@/model/resolvers/Wing";
 import { XChainResolver } from "@/model/resolvers/XChain";
 import { XYChainResolver } from "@/model/resolvers/XYChain";
+import { AIC } from "@/model/resolvers/AIC";
 import type { Step } from "@/types";
 
 export class SudokuSolver {
@@ -34,14 +34,16 @@ export class SudokuSolver {
       new NakedTupleResolver(this.sudoku, 5),
       new HiddenTupleResolver(this.sudoku, 5),
       new FishResolver(this.sudoku, 2),
+      new Wing(this.sudoku, 3),
+      new Wing(this.sudoku, 4),
       new CPRResolver(this.sudoku),
-      new XYWing(this.sudoku),
-      new XYZWing(this.sudoku),
       new XChainResolver(this.sudoku),
       new XYChainResolver(this.sudoku),
       new FishResolver(this.sudoku, 3),
       new FishResolver(this.sudoku, 4),
       new FishResolver(this.sudoku, 5),
+      new Wing(this.sudoku, 5),
+      new AIC(this.sudoku, 5),
     ];
   }
 

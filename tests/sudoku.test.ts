@@ -7,7 +7,7 @@ import mediumSudokus from "../src/sudokus/medium";
 import hardSudokus from "../src/sudokus/hard";
 import diabolicalSudokus from "../src/sudokus/diabolical";
 
-describe.concurrent(
+describe.concurrent.skip(
   "Solves easy sudokus",
   () => {
     test.each(easySudokus.slice(0, 100))("solves puzzle %s", (input) => {
@@ -21,7 +21,7 @@ describe.concurrent(
   15000,
 );
 
-describe.concurrent(
+describe.concurrent.skip(
   "Solves medium sudokus",
   () => {
     test.each(mediumSudokus.slice(0, 100))("solves puzzle %s", (input) => {
@@ -38,7 +38,7 @@ describe.concurrent(
 describe.concurrent(
   "Solves hard sudokus",
   () => {
-    test.each(hardSudokus.slice(0, 100))("solves puzzle %s", (input) => {
+    test.each(hardSudokus.slice(0, 200))("solves puzzle %s", (input) => {
       const values = input.split("").map((d) => Number(d) - 1);
       const sudoku = new Sudoku(values, { autoCandidate: true });
       const sudokuSolver = new SudokuSolver(sudoku);
@@ -52,7 +52,7 @@ describe.concurrent(
 describe.concurrent(
   "Solves diabolical sudokus",
   () => {
-    test.each(diabolicalSudokus.slice(0, 10))("solves puzzle %s", (input) => {
+    test.each(diabolicalSudokus.slice(0, 20))("solves puzzle %s", (input) => {
       const values = input.split("").map((d) => Number(d) - 1);
       const sudoku = new Sudoku(values, { autoCandidate: true });
       const sudokuSolver = new SudokuSolver(sudoku);

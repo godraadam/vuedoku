@@ -5,7 +5,7 @@ export const difficultyColorMap: Record<string, string> = {
   medium: "blue",
   hard: "amber",
   diabolical: "red",
-  custom: "gray",
+  custom: "fuchsia",
 };
 
 export const difficultyNameMap: Record<string, string> = {

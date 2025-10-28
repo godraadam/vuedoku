@@ -10,6 +10,7 @@
           'var(--color-green-500)',
           'var(--color-blue-500)',
           'var(--color-red-500)',
+          'var(--color-fuchsia-500)',
         ]"
       />
     </div>
@@ -18,7 +19,7 @@
         class="text-gray-900 font-medium flex md:gap-4 min-h-6 w-full justify-between items-center"
       >
         <IconButton class="pl-0" @click="onExit"><ChevronLeftIcon class="size-5" />Back</IconButton>
-        <div v-if="showHint" class="font-light text-sm hidden md:block">
+        <div v-if="showHint" class="font-light text-sm hidden md:block max-w-[300px]">
           {{ nextStep ? nextStep.reason : isSolved ? "Solved" : "No idea fam" }}
         </div>
         <div class="flex items-center md:gap-3">
