@@ -1,9 +1,10 @@
-import { Resolver } from "@/model/resolvers/AbstractResolver";
+import { AbstractStrategy } from "@/model/strategies/AbstractStrategy";
 import type Sudoku from "@/model/Sudoku";
 import type { Step } from "@/types";
 import { digits, kCombinations } from "@/util";
 
-export class FishResolver extends Resolver {
+// WIP
+export class FinnedFishResolver extends AbstractStrategy {
   private order: number;
 
   constructor(sudoku: Sudoku, order: number) {
@@ -23,17 +24,18 @@ export class FishResolver extends Resolver {
           const unitToCellsWithCandidate = unitKTuple.map((_unit) =>
             _unit.getCellsWithCandidate(digit),
           );
-          if (
-            unitToCellsWithCandidate.some((cells) => cells.length > this.order || cells.length < 1)
-          ) {
+          // we allow more than <order> nr of candidates in a unit, these will be our fins
+          if (unitToCellsWithCandidate.some((cells) => cells.length < 1)) {
             continue;
           }
+          // but how??
           const diagonalUnitType = unitType == "row" ? "col" : "row";
           const diagonalUnitIdxSet = unitToCellsWithCandidate
             .map((cells) => cells.map((cell) => cell.getUnitIdx(diagonalUnitType)))
             .flat()
             .reduce((set, idx) => set.add(idx), new Set<number>());
 
+          // we need to check fins are located within one box
           if (diagonalUnitIdxSet.size == this.order) {
             // check if there is anything to remove
             const diagonalUnits = Array.from(diagonalUnitIdxSet).map((idx) =>
@@ -58,6 +60,7 @@ export class FishResolver extends Resolver {
                 .map((unit) => unit.map((cell) => cell.getCandidate(digit)))
                 .flat();
               return {
+                reporter: this,
                 type: "eliminate",
                 reason: `${this.getName()} with ${digit + 1}, ${units[0].getDisplay()}s ${unitKTuple
                   .map((_unit) => _unit.getIdx() + 1)
@@ -76,7 +79,24 @@ export class FishResolver extends Resolver {
   }
 
   public getName(): string {
-    const nameMap = { 2: "X-Wing", 3: "Swordfish", 4: "Jellyfish", 5: "Squirmbag" };
+    const nameMap = {
+      2: "Finned X-Wing",
+      3: "Finned Swordfish",
+      4: "Finned Jellyfish",
+      5: "Finned Squirmbag",
+    };
     return nameMap[this.order as keyof typeof nameMap];
+  }
+
+  public getDifficultyScore() {
+    if (this.order == 2) return 4;
+    if (this.order == 3) return 5;
+    if (this.order == 4) return 6;
+    if (this.order == 5) return 7;
+    return 8;
+  }
+
+  public getLink(): string | undefined {
+    return undefined;
   }
 }

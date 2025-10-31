@@ -1,28 +1,30 @@
-import type Cell from "@/model/Cell";
+import Cell from "@/model/Cell";
 
 export default class Candidate {
   private idx: number;
   private cell: Cell;
   private digit: number;
-  private state: boolean;
+  private _isSet: boolean;
 
-  constructor(cell: Cell, digit: number, state: boolean = false) {
+  constructor(cell: Cell, digit: number) {
     this.cell = cell;
     this.digit = digit;
-    this.state = state;
+
+    // any candidate is set by default
+    this._isSet = true;
     this.idx = cell.getCellIdx() * 9 + digit;
   }
 
   public isSet() {
-    return this.state;
+    return this._isSet;
   }
 
   public setState(state: boolean) {
-    this.state = state;
+    this._isSet = state;
   }
 
   public toggleState() {
-    this.state = !this.state;
+    this._isSet = !this._isSet;
   }
 
   public getCell() {

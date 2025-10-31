@@ -26,8 +26,8 @@ export default class SudokuUnit extends Group {
       row: "row",
       col: "column",
       box: "box",
-      xchute: "horizontal chute",
-      ychute: "vertical chute",
+      xchute: "floor",
+      ychute: "tower",
     };
     return displayMap[this.type];
   }

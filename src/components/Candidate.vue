@@ -1,8 +1,9 @@
 <template>
   <div
+    ref="root"
     :class="
       cn(
-        'text-xs md:text-base pointer-events-none md:pointer-events-auto font-thin text-transparent group-hover:text-gray-500 border-gray-500 rounded-full flex justify-center items-center cursor-pointer hover:text-gray-900 transition-colors duration-100 ease-out',
+        'z-10 text-xs md:text-base pointer-events-none md:pointer-events-auto font-thin text-transparent group-hover:text-gray-500 border-gray-500 rounded-full flex justify-center items-center cursor-pointer hover:text-gray-900 transition-colors duration-100 ease-out',
         isOn && 'text-gray-500 font-light group-hover:text-gray-900',
         canBeRemoved && 'crossed',
         canBePlaced && 'text-white bg-theme-600 group-hover:text-white hover:text-white',
@@ -13,6 +14,7 @@
     :data-on="isOn"
     :data-place="canBePlaced"
     :data-participant="isParticipant"
+    @mouseenter="focusedCandidate = candidate"
     @click="handleClick"
   >
     {{ candidate.getDigit() + 1 }}
@@ -20,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, onMounted, useTemplateRef } from "vue";
 
 import useState from "@/composables/useState";
 import type CandidateModel from "@/model/Candidate";
@@ -29,6 +31,8 @@ import { cn } from "@/util";
 const props = defineProps<{
   candidate: CandidateModel;
 }>();
+
+const rootRef = useTemplateRef("root");
 
 const isOn = computed(() =>
   autoCandidates.value
@@ -52,6 +56,8 @@ const {
   showHint,
   sudoku,
   autoCandidates,
+  candidatePositions,
+  focusedCandidate,
 } = useState();
 
 const canBeRemoved = computed(
@@ -73,9 +79,15 @@ function handleClick(e: PointerEvent) {
       props.candidate.getDigit(),
     );
   } else {
-    sudoku.value.setCandidate(props.candidate, !props.candidate.isSet());
+    sudoku.value.setCandidate(props.candidate, !props.candidate.isSet(), true, true);
   }
 }
+
+onMounted(() => {
+  // register position
+  const box = rootRef.value!.getBoundingClientRect();
+  candidatePositions.value.set(props.candidate.getCandidateIdx(), box);
+});
 </script>
 
 <style scoped>

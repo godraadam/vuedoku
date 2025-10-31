@@ -5,7 +5,8 @@ export class Group {
   protected _cells: Array<Cell>;
 
   constructor(cells: Array<Cell>) {
-    this._cells = cells;
+    const cellSet = new Set(cells);
+    this._cells = Array.from(cellSet);
   }
 
   public getCells() {
@@ -92,13 +93,5 @@ export class Group {
     for (let i = 0; i < 9; i++) {
       yield this._cells[i]!;
     }
-  }
-
-  public removeCandidate(candidate: number) {
-    this._cells.forEach((cell) => cell.removeCandidate(candidate));
-  }
-
-  public removeCandidates(candidates: Array<number>) {
-    this._cells.forEach((cell) => candidates.forEach((cand) => cell.removeCandidate(cand)));
   }
 }

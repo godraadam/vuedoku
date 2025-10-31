@@ -8,6 +8,7 @@ import type Cell from "@/model/Cell";
 import { useTimer } from "@/composables/useTimer";
 import { difficulties } from "@/consts";
 import type { Difficulty } from "@/types";
+import Candidate from "@/model/Candidate";
 
 function useState() {
   const route = useRoute();
@@ -25,11 +26,15 @@ function useState() {
   const showHint = ref(false);
   const autoHighlight = ref(false);
   const hintsUsed = ref(0);
+  const showGraph = ref(false);
+  const debugMode = ref(false);
 
   const running = ref(true);
   const { time, reset: resetTimer } = useTimer(running);
 
-  const sudoku = ref(new Sudoku(values.value, { autoCandidate: true }));
+  const sudoku = ref(new Sudoku(values.value));
+  const weakLinks = computed(() => sudoku.value.getInferenceGraph().getWeakLinks());
+  const strongLinks = computed(() => sudoku.value.getInferenceGraph().getStrongLinks());
 
   const sudokuSolver = computed(() => new SudokuSolver(sudoku.value as Sudoku));
 
@@ -53,10 +58,13 @@ function useState() {
   const isSolved = computed(() => sudoku.value.isProperSolved());
   const nextStep = computed(() => sudokuSolver.value.getNextStep());
   const focusedCell = ref(sudoku.value.getCellByIdx(0)) as Ref<Cell>;
+  const focusedCandidate = ref() as Ref<Candidate>;
   const highlightedDigit = ref<number>();
 
+  const candidatePositions = ref(new Map<Candidate["idx"], DOMRect>());
+
   function reset() {
-    sudoku.value = new Sudoku(values.value, { autoCandidate: true });
+    sudoku.value = new Sudoku(values.value);
     resetTimer();
     running.value = true;
     hintsUsed.value = 0;
@@ -98,9 +106,15 @@ function useState() {
     autoHint,
     autoHighlight,
     highlightedDigit,
+    focusedCandidate,
+    candidatePositions,
+    weakLinks,
+    strongLinks,
+    showGraph,
     showHint,
     hintsUsed,
     running,
+    debugMode,
     time,
     input,
     reset,

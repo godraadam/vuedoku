@@ -1,9 +1,9 @@
-import { Resolver } from "@/model/resolvers/AbstractResolver";
+import { AbstractStrategy } from "@/model/strategies/AbstractStrategy";
 import type Sudoku from "@/model/Sudoku";
 import type { Step } from "@/types";
 import { kCombinations } from "@/util";
 
-export class CPRResolver extends Resolver {
+export class CPRResolver extends AbstractStrategy {
   constructor(sudoku: Sudoku) {
     super(sudoku);
   }
@@ -46,6 +46,7 @@ export class CPRResolver extends Resolver {
             if (candidates.length > 0) {
               const participants = [...cellA.getSetCandidates(), ...cellB.getSetCandidates()];
               return {
+                reporter: this,
                 type: "eliminate",
                 reason: `${this.getName()} (${cellA
                   .getCandidateList()
@@ -65,5 +66,13 @@ export class CPRResolver extends Resolver {
 
   public getName(): string {
     return "Chute remote pair";
+  }
+
+  public getDifficultyScore() {
+    return 3.5;
+  }
+
+  public getLink(): string | undefined {
+    return "https://www.taupierbw.be/SudokuCoach/SC_ChuteRemotePairs.shtml";
   }
 }

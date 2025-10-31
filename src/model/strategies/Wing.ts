@@ -1,10 +1,10 @@
-import { Resolver } from "@/model/resolvers/AbstractResolver";
+import { AbstractStrategy } from "@/model/strategies/AbstractStrategy";
 import type Sudoku from "@/model/Sudoku";
 import { Group } from "@/model/Group";
 import type { Step } from "@/types";
 import { kCombinations } from "@/util";
 
-export class Wing extends Resolver {
+export class Wing extends AbstractStrategy {
   private order: number;
   constructor(sudoku: Sudoku, order: number) {
     super(sudoku);
@@ -55,6 +55,7 @@ export class Wing extends Resolver {
             .map((cell) => cell.getSetCandidates())
             .flat();
           return {
+            reporter: this,
             type: "eliminate",
             reason: `${this.getName()}; z=${z + 1}. Pivot cell (${pivot.getRowIdx() + 1}, ${
               pivot.getColIdx() + 1
@@ -74,5 +75,25 @@ export class Wing extends Resolver {
     if (this.order == 4) return "WXYZ-Wing";
     if (this.order == 5) return "UWXYZ-Wing";
     return "";
+  }
+
+  public getDifficultyScore() {
+    if (this.order == 3) return 4;
+    if (this.order == 4) return 4.5;
+    if (this.order == 5) return 5;
+    return 6;
+  }
+
+  public getLink() {
+    if (this.order == 3) {
+      return "https://www.taupierbw.be/SudokuCoach/SC_XYZWing.shtml";
+    }
+    if (this.order == 4) {
+      return "https://www.taupierbw.be/SudokuCoach/SC_WXYZWing.shtml";
+    }
+    if (this.order == 5) {
+      return "https://www.taupierbw.be/SudokuCoach/SC_WXYZWing.shtml";
+    }
+    return undefined;
   }
 }

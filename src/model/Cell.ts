@@ -12,14 +12,14 @@ export default class Cell {
   private verticalChuteIdx: number;
   private _isGiven: boolean;
 
-  constructor(idx: number, candidateDefault = true) {
+  constructor(idx: number) {
     this.idx = idx;
     this.colIdx = this.idx % 9;
     this.rowIdx = Math.floor(this.idx / 9);
     this.boxIdx = Math.floor(this.colIdx / 3) + (this.rowIdx - (this.rowIdx % 3));
     this.horizontalChuteIdx = Math.floor(this.rowIdx / 3);
     this.verticalChuteIdx = Math.floor(this.colIdx / 3);
-    this.candidates = Array.from({ length: 9 }, (_, i) => new Candidate(this, i, candidateDefault));
+    this.candidates = Array.from({ length: 9 }, (_, i) => new Candidate(this, i));
     this._isGiven = false;
   }
 
@@ -61,18 +61,6 @@ export default class Cell {
     return handlerMap[unitType].call(this);
   }
 
-  public removeCandidate(value: number) {
-    this.getCandidate(value).setState(false);
-  }
-
-  public setCandidate(value: number, state: boolean) {
-    this.getCandidate(value).setState(state);
-  }
-
-  public toggleCandidate(value: number) {
-    this.getCandidate(value).toggleState();
-  }
-
   public hasCandidate(value: number) {
     return this.getCandidate(value).isSet();
   }
@@ -92,7 +80,6 @@ export default class Cell {
   public setValue(value: number, isGiven = false) {
     this.solvedValue = value;
     this._isGiven = isGiven;
-    this.getCandidates().forEach((c) => c.setState(false));
   }
 
   public getCandidateList() {
@@ -114,9 +101,7 @@ export default class Cell {
   }
 
   public hasSameCandidatesAs(cell: Cell) {
-    return this.getCandidates().every(
-      (cand) => cand.isSet() == cell.hasCandidate(cand.getDigit()),
-    );
+    return this.getCandidates().every((cand) => cand.isSet() == cell.hasCandidate(cand.getDigit()));
   }
 
   public equals(cell: Cell) {
@@ -127,10 +112,6 @@ export default class Cell {
     return (["row", "col", "box"] as const).some(
       (unitType: UnitType) => cell.getUnitIdx(unitType) == this.getUnitIdx(unitType),
     );
-  }
-
-  public resetCandidates() {
-    this.getCandidates().forEach((cand) => cand.setState(true));
   }
 
   public toString() {

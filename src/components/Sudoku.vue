@@ -1,5 +1,9 @@
 <template>
-  <div v-if="running || isSolved" class="grid grid-cols-9 grid-rows-9 w-full">
+  <div
+    v-if="running || isSolved"
+    id="sudoku-grid-wrapper"
+    class="grid grid-cols-9 grid-rows-9 w-full"
+  >
     <Cell v-for="cell of cells" :key="cell.getCellIdx()" :cell />
   </div>
   <div v-else class="grid grid-cols-9 grid-rows-9 w-full relative">
@@ -17,6 +21,8 @@
       @click="running = true"
     />
   </div>
+  <Graph />
+  <Chain v-if="chain && autoHint" :chain="chain" />
 </template>
 
 <script setup lang="ts">
@@ -26,6 +32,8 @@ import Cell from "@/components/Cell.vue";
 import { useKeyboardEvent } from "@/composables/useKeyboardEvent";
 import useState from "@/composables/useState";
 import PauseIcon from "@/components/ui/icons/pause.svg";
+import Graph from "@/components/Graph.vue";
+import Chain from "@/components/Chain.vue";
 
 const {
   focusedCell,
@@ -36,7 +44,13 @@ const {
   isSolved,
   autoHighlight,
   highlightedDigit,
+  autoHint,
+  nextStep,
 } = useState();
+
+const chain = computed(() =>
+  nextStep.value?.type == "eliminate" ? nextStep.value.chain : undefined,
+);
 
 const cells = computed(() => sudoku.value.getCells());
 
@@ -63,7 +77,7 @@ useKeyboardEvent(
       ].includes(e.code)
     ) {
       const candidate = focusedCell.value.getCandidate(Number(e.code.replace("Digit", "")) - 1);
-      return sudoku.value.setCandidate(candidate, !candidate.isSet());
+      return sudoku.value.setCandidate(candidate, !candidate.isSet(), true, true);
     }
     if (["1", "2", "3", "4", "5", "6", "7", "8", "9"].includes(e.key)) {
       return sudoku.value.placeValueInCell(focusedCell.value.getCellIdx(), Number(e.key) - 1);
@@ -118,6 +132,9 @@ useKeyboardEvent(
         ));
       }
       return (focusedCell.value = sudoku.value.getNeighborOfCell(focusedCell.value, "up"));
+    }
+    if (e.key == "Enter" && autoHint.value && nextStep.value) {
+      return sudoku.value.applyStep(nextStep.value);
     }
   },
   { preventDefault: true },

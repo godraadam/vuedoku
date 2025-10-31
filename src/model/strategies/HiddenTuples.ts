@@ -1,9 +1,9 @@
-import { Resolver } from "@/model/resolvers/AbstractResolver";
+import { AbstractStrategy } from "@/model/strategies/AbstractStrategy";
 import type Sudoku from "@/model/Sudoku";
 import type { Step } from "@/types";
 import { getTupleName, kCombinations } from "@/util";
 
-export class HiddenTupleResolver extends Resolver {
+export class HiddenTupleResolver extends AbstractStrategy {
   private tupleSize: number;
 
   constructor(sudoku: Sudoku, tupleSize: number) {
@@ -40,6 +40,7 @@ export class HiddenTupleResolver extends Resolver {
             // hidden singles can be placed
             if (this.tupleSize == 1) {
               return {
+                reporter: this,
                 type: "place",
                 reason: `${this.getName()} ${tuple.at(0)! + 1} in ${unit.getDisplay()} ${unit.getIdx() + 1} `,
                 place: candidateCells.at(0)!.getCandidate(tuple.at(0)!),
@@ -58,6 +59,7 @@ export class HiddenTupleResolver extends Resolver {
                 .flat()
                 .filter((cand) => tuple.includes(cand.getDigit()));
               return {
+                reporter: this,
                 type: "eliminate",
                 candidates,
                 participants,
@@ -73,7 +75,32 @@ export class HiddenTupleResolver extends Resolver {
     return undefined;
   }
 
+  public getDifficultyScore() {
+    if (this.tupleSize == 1) return 1.5;
+    if (this.tupleSize == 2) return 2;
+    if (this.tupleSize == 3) return 2.5;
+    if (this.tupleSize == 4) return 3.5;
+    if (this.tupleSize == 5) return 4.5;
+    return 6;
+  }
+
   public getName(): string {
     return `Hidden ${getTupleName(this.tupleSize)}`;
+  }
+
+  public getLink() {
+    if (this.tupleSize == 1) {
+      return "https://www.taupierbw.be/SudokuCoach/SC_Singles.shtml";
+    }
+    if (this.tupleSize == 2) {
+      return "https://www.taupierbw.be/SudokuCoach/SC_HiddenPairs.shtml";
+    }
+    if (this.tupleSize == 3) {
+      return "https://www.taupierbw.be/SudokuCoach/SC_HiddenTriples.shtml";
+    }
+    if (this.tupleSize == 4) {
+      return "https://www.taupierbw.be/SudokuCoach/SC_HiddenQuads.shtml";
+    }
+    return undefined;
   }
 }

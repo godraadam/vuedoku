@@ -5,7 +5,6 @@ export default defineConfig({
   plugins: [tsconfigPaths()],
   test: {
     alias: { "@/*": "src/*" },
-    reporters: ["dot"],
-    // onConsoleLog: () => true,
+    onConsoleLog: () => true,
   },
 });

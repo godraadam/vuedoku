@@ -10,12 +10,14 @@ export class InferenceGraph {
   private nodes: Array<Candidate>;
   private loop: boolean;
   private inferenceGraph: Array<Array<GraphElement>> = [];
+  private endOnSameDigit: boolean;
 
-  constructor(sudoku: Sudoku, loop?: boolean) {
+  constructor(sudoku: Sudoku, loop?: boolean, endOnSameDigit?: boolean) {
     this.sudoku = sudoku;
     this.inferenceGraph = Array.from({ length: 81 * 9 }, () => Array(81 * 9).fill(undefined));
     this.nodes = [];
     this.loop = loop ?? false;
+    this.endOnSameDigit = endOnSameDigit ?? true;
   }
 
   public build(nodes?: Array<Candidate>) {
@@ -63,7 +65,6 @@ export class InferenceGraph {
     return this.inferenceGraph[cand.getCandidateIdx()]
       .filter((it) => {
         if (it && !it.candidate.isSet()) {
-          console.log(it.candidate);
         }
         return (
           it != undefined &&
@@ -158,7 +159,9 @@ export class InferenceGraph {
         if (
           !this.loop &&
           newPath.length >= minLength &&
-          next.getDigit() == start.getDigit() &&
+          (this.endOnSameDigit
+            ? next.getDigit() == start.getDigit()
+            : next.getDigit() != start.getDigit()) &&
           newPath.length % 2 == 0
         ) {
           yield newPath;

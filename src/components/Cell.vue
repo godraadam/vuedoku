@@ -6,7 +6,7 @@
   >
     <div
       v-if="cell.isFilled()"
-      class="text-2xl md:text-5xl font-semibold h-full w-full flex items-center justify-center"
+      class="z-10 text-2xl md:text-5xl font-semibold h-full w-full flex items-center justify-center"
       :class="cell.isGiven() ? 'text-gray-900' : 'text-theme-600'"
       @dblclick="handleDoubleClick"
     >

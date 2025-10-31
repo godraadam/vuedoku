@@ -1,5 +1,5 @@
 <template>
-  <div class="h-fit mt-6 space-y-2">
+  <div id="mobile-keyboard-wrapper" class="h-fit mt-6 space-y-2">
     <div class="flex gap-2">
       <button
         class="font-medium text-gray-900 data-[mode=normal]:text-theme-600"

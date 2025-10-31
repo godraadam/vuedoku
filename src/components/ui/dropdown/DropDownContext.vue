@@ -15,6 +15,11 @@ const emits = defineEmits<{ close: [] }>();
 const { id } = useAttrs();
 
 const props = withDefaults(defineProps<{ closeOnSelect?: boolean }>(), { closeOnSelect: true });
+defineExpose({
+  toggleOpen: () => {
+    isOpen.value = !isOpen.value;
+  },
+});
 
 provide("state", {
   isOpen,

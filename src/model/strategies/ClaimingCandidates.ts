@@ -1,9 +1,9 @@
-import { Resolver } from "@/model/resolvers/AbstractResolver";
+import { AbstractStrategy } from "@/model/strategies/AbstractStrategy";
 import type Sudoku from "@/model/Sudoku";
 import type { Step } from "@/types";
 import { digits } from "@/util";
 
-export class ClaimingCandidates extends Resolver {
+export class ClaimingCandidates extends AbstractStrategy {
   constructor(sudoku: Sudoku) {
     super(sudoku);
   }
@@ -40,6 +40,7 @@ export class ClaimingCandidates extends Resolver {
               .filter((cell) => unit.includesCell(cell) && cell.hasCandidate(digit))
               .map((cell) => cell.getCandidate(digit));
             return {
+              reporter: this,
               type: "eliminate",
               candidates,
               participants,
@@ -56,5 +57,13 @@ export class ClaimingCandidates extends Resolver {
 
   public getName(): string {
     return "Claiming candidates";
+  }
+
+  public getDifficultyScore() {
+    return 2.5;
+  }
+
+  public getLink(): string | undefined {
+    return "https://www.taupierbw.be/SudokuCoach/SC_BoxReduction.shtml";
   }
 }

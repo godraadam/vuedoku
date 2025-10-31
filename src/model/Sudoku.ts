@@ -4,6 +4,7 @@ import Candidate from "@/model/Candidate";
 import { Group } from "@/model/Group";
 import { digits } from "@/util";
 import type { Step, UnitType } from "@/types";
+import { InferenceGraph } from "@/model/InferenceGraph";
 
 export default class Sudoku {
   private state: Array<Cell>;
@@ -12,8 +13,9 @@ export default class Sudoku {
   private _boxes: Array<SudokuUnit> = [];
   private _xchutes: Array<SudokuUnit> = [];
   private _ychutes: Array<SudokuUnit> = [];
-  private options?: Partial<{ autoCandidate: boolean }>;
   private userSetCandidatesCache = new Map<Candidate, boolean>();
+  private inferenceGraph: InferenceGraph;
+  private placedValueCounts = Array(9).fill(0);
 
   private unitsMap: Record<UnitType, Array<SudokuUnit>> = {
     row: this._rows,
@@ -28,42 +30,21 @@ export default class Sudoku {
    * @param initalValues 81 element array, containing `value - 1`, or `-1` for unsolved cells
    * read left-to-right, top-to-bottom, i.e. top-left cell is index 0, bottom-right cell is index 80
    */
-  constructor(initialValues?: Array<number>, options?: Partial<{ autoCandidate: boolean }>) {
-    this.options = options;
-    this.state = Array.from({ length: 9 * 9 }, (_, i) => new Cell(i, options?.autoCandidate));
+  constructor(initialValues?: Array<number>) {
+    this.state = Array.from({ length: 9 * 9 }, (_, i) => new Cell(i));
+    this.inferenceGraph = new InferenceGraph(this);
     if (initialValues) {
       this.initalize(initialValues);
     }
+    this.inferenceGraph.buildGraph();
   }
 
   public initalize(initialValues: Array<number>) {
     initialValues.forEach((val, idx) => {
       if (val != -1) {
-        this.placeValueInCell(idx, val, true);
+        this.placeValueInCell(idx, val, true, false);
       }
     });
-  }
-
-  private populateCandidates() {
-    this.state.forEach((cell) => cell.resetCandidates());
-    for (const [cand, state] of this.userSetCandidatesCache.entries()) {
-      if (state == true) {
-        cand.setState(true);
-      }
-    }
-    this.state.forEach((cell) => {
-      if (cell.isFilled()) {
-        (["row", "col", "box"] as const).forEach((unitType: UnitType) => {
-          this.removeCandidateFromUnit(unitType, cell.getUnitIdx(unitType), cell.getValue());
-        });
-        cell.getCandidates().forEach((c) => c.setState(false));
-      }
-    });
-    for (const [cand, state] of this.userSetCandidatesCache.entries()) {
-      if (state == false) {
-        cand.setState(false);
-      }
-    }
   }
 
   public getCells() {
@@ -161,54 +142,86 @@ export default class Sudoku {
   // used for testing
   public applyStep(step: Step) {
     if (step.type == "place") {
-      this.placeValueInCell(step.place.getCell().getCellIdx(), step.place.getDigit());
+      this.placeValueInCell(step.place.getCell().getCellIdx(), step.place.getDigit(), false, true);
     }
     if (step.type == "eliminate") {
-      step.candidates.forEach((cand) => cand.setState(false));
+      step.candidates.forEach((cand) => this.setCandidate(cand, false));
+      this.inferenceGraph.buildGraph();
     }
   }
 
-  public removeCandidateFromUnit(unitType: UnitType, unitIdx: number, value: number) {
-    const unit = this.getUnit(unitType, unitIdx);
-    unit.removeCandidate(value);
-  }
-
-  public removeCandidateFromRow(rowIdx: number, value: number) {
-    this.removeCandidateFromUnit("row", rowIdx, value);
-  }
-
-  public removeCandidateFromCol(colIdx: number, value: number) {
-    this.removeCandidateFromUnit("col", colIdx, value);
-  }
-
-  public removeCandidateFromBox(boxIdx: number, value: number) {
-    this.removeCandidateFromUnit("box", boxIdx, value);
-  }
-
-  public placeValueInCell(cellIdx: number, value: number, isGiven = false) {
+  public placeValueInCell(
+    cellIdx: number,
+    digit: number,
+    isGiven = false,
+    updateInferenceGraph = true,
+  ) {
     const cell = this.getCellByIdx(cellIdx);
     if (cell.isGiven()) {
       return;
     }
-    cell.setValue(value, isGiven);
-    if (this.options?.autoCandidate) {
-      this.populateCandidates();
+    // place value in cell
+    cell.setValue(digit, isGiven);
+    cell.getSetCandidates().forEach((cand) => this.setCandidate(cand, false));
+
+    const seenSetCandidates = this.getCellsSeenBy(cell)
+      .map((cell) => cell.getCandidate(digit))
+      .filter((candidate) => candidate.isSet());
+
+    seenSetCandidates.forEach((candidate) => this.setCandidate(candidate, false));
+    if (updateInferenceGraph) {
+      this.inferenceGraph.buildGraph();
     }
+
+    this.placedValueCounts[digit]++;
   }
 
   public removeValueFromCell(cellIdx: number) {
-    if (!this.state[cellIdx].isFilled() || this.state[cellIdx].isGiven()) {
+    const cell = this.getCellByIdx(cellIdx);
+    if (!cell.isFilled() || this.state[cellIdx].isGiven()) {
       return;
     }
-    this.state[cellIdx].setValue(-1);
-    if (this.options?.autoCandidate) {
-      this.populateCandidates();
-    }
+    const digit = cell.getValue();
+    cell.setValue(-1);
+
+    // place candidates back in seen cells, except ones removed by the player
+    const seenCells = this.getCellsSeenBy(cell);
+    const candidatesInCell = cell.getCandidates();
+    const seenCandidates = seenCells
+      .filter((cell) => !cell.isFilled())
+      .map((cell) => cell.getCandidate(digit));
+
+    const candidatesToReset: Array<Candidate> = [];
+    candidatesToReset.push(
+      ...seenCandidates.filter(
+        (candidate) =>
+          this.userSetCandidatesCache.get(candidate) != false &&
+          this.getCellsSeenBy(candidate.getCell()).every((_cell) => _cell.getValue() != digit),
+      ),
+    );
+    candidatesToReset.push(
+      ...candidatesInCell.filter((candidate) =>
+        seenCells.every((cell) => cell.getValue() != candidate.getDigit()),
+      ),
+    );
+    candidatesToReset.forEach((candidate) => this.setCandidate(candidate, true));
+    this.placedValueCounts[digit]--;
+    this.inferenceGraph.buildGraph();
   }
 
-  public setCandidate(cand: Candidate, state: boolean) {
-    this.userSetCandidatesCache.set(cand, state);
-    cand.setState(state);
+  public setCandidate(
+    candidate: Candidate,
+    isSet: boolean,
+    isEliminated = false,
+    rebuildGraph = false,
+  ) {
+    if (isEliminated) {
+      this.userSetCandidatesCache.set(candidate, isSet);
+    }
+    candidate.setState(isSet);
+    if (rebuildGraph) {
+      this.inferenceGraph.buildGraph();
+    }
   }
 
   public findCell(
@@ -354,5 +367,33 @@ export default class Sudoku {
 
   public getUserSetCandidates() {
     return this.userSetCandidatesCache;
+  }
+
+  public getBoxesOfFloor(floorIdx: number) {
+    return this._boxes.filter((box) => Math.floor(box.getIdx() / 3) == floorIdx);
+  }
+
+  public getBoxesOfTower(floorIdx: number) {
+    return this._boxes.filter((box) => box.getIdx() % 3 == floorIdx);
+  }
+
+  public getBoxesOfChute(chuteIdx: number, unitType: "xchute" | "ychute") {
+    if (unitType == "xchute") {
+      return this.getBoxesOfFloor(chuteIdx);
+    }
+    return this.getBoxesOfTower(chuteIdx);
+  }
+
+  public getInferenceGraph() {
+    return this.inferenceGraph;
+  }
+
+  public *digits() {
+    for (let i = 0; i < this.placedValueCounts.length; i++) {
+      if (this.placedValueCounts[i] == 9) {
+        continue;
+      }
+      yield i;
+    }
   }
 }

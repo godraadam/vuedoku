@@ -1,10 +1,10 @@
-import { Resolver } from "@/model/resolvers/AbstractResolver";
+import { AbstractStrategy } from "@/model/strategies/AbstractStrategy";
 import type Sudoku from "@/model/Sudoku";
 import { Group } from "@/model/Group";
 import { getTupleName, kCombinations } from "@/util";
 import type { Step } from "@/types";
 
-export class NakedTupleResolver extends Resolver {
+export class NakedTupleResolver extends AbstractStrategy {
   private tupleSize: number;
 
   constructor(sudoku: Sudoku, tupleSize: number) {
@@ -32,8 +32,9 @@ export class NakedTupleResolver extends Resolver {
             const value = cellGroup.getCandidateSet().at(0)!;
             if (cellGroup.getSize() == 1) {
               return {
+                reporter: this,
                 type: "place",
-                reason: `${this.getName()} ${value + 1} in ${unit.getDisplay()} ${unit.getIdx() + 1}`,
+                reason: this.getName(),
                 place: cells.at(0)!.getCandidate(value),
               };
             }
@@ -54,6 +55,7 @@ export class NakedTupleResolver extends Resolver {
                 .flat();
 
               return {
+                reporter: this,
                 type: "eliminate",
                 candidates,
                 participants,
@@ -71,5 +73,29 @@ export class NakedTupleResolver extends Resolver {
 
   public getName(): string {
     return `Naked ${getTupleName(this.tupleSize)}`;
+  }
+
+  public getDifficultyScore() {
+    if (this.tupleSize == 1) return 1;
+    if (this.tupleSize == 2) return 1.5;
+    if (this.tupleSize == 3) return 2;
+    if (this.tupleSize == 4) return 3;
+    return 4;
+  }
+
+  public getLink() {
+    if (this.tupleSize == 1) {
+      return "https://www.taupierbw.be/SudokuCoach/SC_Singles.shtml";
+    }
+    if (this.tupleSize == 2) {
+      return "https://www.taupierbw.be/SudokuCoach/SC_NakedPairs.shtml";
+    }
+    if (this.tupleSize == 3) {
+      return "https://www.taupierbw.be/SudokuCoach/SC_NakedTriples.shtml";
+    }
+    if (this.tupleSize == 4) {
+      return "https://www.taupierbw.be/SudokuCoach/SC_NakedQuads.shtml";
+    }
+    return undefined;
   }
 }
