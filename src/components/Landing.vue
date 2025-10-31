@@ -60,7 +60,7 @@ const sudokuString = ref("");
 const blurred = ref(false);
 const isValid = computed(
   () =>
-    sudokuString.value.length == 81 && sudokuString.value.split("").every((ch) => /[0-9]/.test(ch)),
+    sudokuString.value.length == 81 && sudokuString.value.split("").every((ch) => /[.\d]/.test(ch)),
 );
 
 const difficultyOptions = difficulties
@@ -73,7 +73,7 @@ const difficultyOptions = difficulties
 
 async function onPlay(difficulty: Difficulty, sudokuString?: string) {
   if (difficulty == "custom" && sudokuString) {
-    return await router.push(`custom/${sudokuString}`);
+    return await router.push(`custom/${sudokuString.trim().replace(/\./g, "0")}`);
   } else {
     return await router.push(`/${difficulty}`);
   }

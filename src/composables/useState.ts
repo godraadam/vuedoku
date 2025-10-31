@@ -13,7 +13,7 @@ import Candidate from "@/model/Candidate";
 function useState() {
   const route = useRoute();
   const input = computed(() => route.params.input as string | undefined);
-  const values = computed(() => input.value?.split("").map((c) => Number(c) - 1));
+  const values = computed(() => input.value?.split("").map((c) => (c == "." ? -1 : Number(c) - 1)));
   const difficulty = computed(
     () =>
       (difficulties.includes((route.params.difficulty as Difficulty) ?? "")
