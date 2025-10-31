@@ -1,21 +1,19 @@
 <template>
   <main class="h-screen w-screen flex items-center justify-center px-3">
     <div class="flex flex-col gap-8 w-lg">
-      <h1 class="text-5xl font-bold mb-6 mt-8 md:mt-0">
-        Sudoku by
-        <a href="https://godraadam.com" class="hover:text-sky-500 hover:underline transition-colors">godraadam</a>
-      </h1>
+      <h1 class="text-7xl font-light mt-8 md:mt-0">Sudoku · 数独</h1>
+
       <div class="flex flex-col gap-2">
         <label for="input" class="text-sm font-medium text-gray-900">Play random sudoku</label>
         <div class="grid grid-cols-2 gap-2">
           <button
             v-for="option of difficultyOptions"
             :key="option.to"
-            :class="`text-white rounded-xl flex items-center gap-2 justify-center px-3 py-2 w-full h-48 text-center cursor-pointer bg-${option.color}-600 hover:bg-${option.color}-500 transition-colors`"
+            :class="`text-gray-600 rounded-xl flex items-center gap-2 justify-center px-3 py-2 w-full text-center cursor-pointer border border-gray-300 hover:border-${option.color}-500 transition-colors`"
             @click="() => onPlay(option.to)"
           >
             {{ option.name }}
-            <PlayIcon class="size-5 text-white" />
+            <PlayIcon :class="`size-5 text-${option.color}-600`" />
           </button>
         </div>
       </div>
@@ -44,6 +42,7 @@
       </button>
     </div>
   </main>
+  <Footer />
 </template>
 
 <script setup lang="ts">
@@ -51,8 +50,10 @@ import { computed, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 
 import PlayIcon from "@/components/ui/icons/play.svg";
+import Footer from "@/components/Footer.vue";
 import { difficulties, difficultyColorMap, difficultyNameMap } from "@/consts";
 import type { Difficulty } from "@/types";
+import { useKeyboardEvent } from "@/composables/useKeyboardEvent";
 
 const router = useRouter();
 const sudokuString = ref("");
@@ -79,4 +80,10 @@ async function onPlay(difficulty: Difficulty, sudokuString?: string) {
 }
 
 onMounted(() => console.log("Welcome to my sudoku page!"));
+
+useKeyboardEvent((e) => {
+  if (e.key == "Enter" && isValid) {
+    onPlay("custom", sudokuString.value);
+  }
+});
 </script>

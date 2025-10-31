@@ -1,10 +1,13 @@
 <template>
   <RouterView />
+  <Footer />
 </template>
 
 <script setup lang="ts">
 import { RouterView, useRoute, useRouter } from "vue-router";
 import { computed, watch } from "vue";
+
+import Footer from "@/components/Footer.vue";
 import { difficulties, difficultyColorMap } from "@/consts";
 import type { Difficulty } from "@/types";
 import { getRandomSudoku } from "@/util";

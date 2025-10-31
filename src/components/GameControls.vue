@@ -142,7 +142,9 @@
             >
           </DropDownContent>
         </DropDownContext>
-        <template #popper>Open Settings</template>
+        <template #popper
+          >Open Settings <span class="text-sm font-mono text-gray-400"> [Cmd+,]</span></template
+        >
       </Tooltip>
     </div>
   </div>
@@ -251,7 +253,7 @@ useKeyboardEvent((e) => {
     onToggleLike();
   } else if (e.key == "r" && e.metaKey) {
     reset();
-  } else if (e.key == "w" && e.metaKey) {
+  } else if (e.key == "b" && e.metaKey) {
     onExit();
   } else if (e.key == "," && e.metaKey) {
     settingsDropDownRef.value?.toggleOpen();

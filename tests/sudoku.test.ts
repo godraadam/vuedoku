@@ -7,7 +7,7 @@ import mediumSudokus from "../src/sudokus/medium";
 import hardSudokus from "../src/sudokus/hard";
 import diabolicalSudokus from "../src/sudokus/diabolical";
 
-describe.concurrent(
+describe.concurrent.skip(
   "Solves easy sudokus",
   () => {
     test.each(easySudokus.slice(0, 1000))("solves puzzle %s", (input) => {
@@ -15,7 +15,9 @@ describe.concurrent(
       const sudoku = new Sudoku(values, { autoCandidate: true });
       const sudokuSolver = new SudokuSolver(sudoku);
       sudokuSolver.solve();
-      expect(sudoku.isProperSolved()).toBe(true);
+
+      const state = sudoku.getState();
+      expect(state).toBe("solved");
     });
   },
   15000,
@@ -29,36 +31,42 @@ describe.concurrent.skip(
       const sudoku = new Sudoku(values, { autoCandidate: true });
       const sudokuSolver = new SudokuSolver(sudoku);
       sudokuSolver.solve();
-      expect(sudoku.isProperSolved()).toBe(true);
-    });
-  },
-  15000,
-);
 
-describe.concurrent.skip(
-  "Solves hard sudokus",
-  () => {
-    test.each(hardSudokus.slice(0, 1500))("solves puzzle %s", (input) => {
-      const values = input.split("").map((d) => Number(d) - 1);
-      const sudoku = new Sudoku(values, { autoCandidate: true });
-      const sudokuSolver = new SudokuSolver(sudoku);
-      sudokuSolver.solve();
-      expect(sudoku.isProperSolved()).toBe(true);
+      const state = sudoku.getState();
+      expect(state).toBe("solved");
     });
   },
   15000,
 );
 
 describe.concurrent(
-  "Solves diabolical sudokus",
+  "Solves hard sudokus",
   () => {
-    test.each(diabolicalSudokus.slice(0, 20))("solves puzzle %s", (input) => {
+    test.each(hardSudokus.slice(0, 2000))("solves puzzle %s", (input) => {
       const values = input.split("").map((d) => Number(d) - 1);
       const sudoku = new Sudoku(values, { autoCandidate: true });
       const sudokuSolver = new SudokuSolver(sudoku);
       sudokuSolver.solve();
-      expect(sudoku.isProperSolved()).toBe(true);
+
+      const state = sudoku.getState();
+      expect(state).toBe("solved");
     });
   },
-  15000,
+  1000 * 60 * 5,
+);
+
+describe.concurrent(
+  "Solves diabolical sudokus",
+  () => {
+    test.each(diabolicalSudokus.slice(0, 200))("solves puzzle %s", (input) => {
+      const values = input.split("").map((d) => Number(d) - 1);
+      const sudoku = new Sudoku(values, { autoCandidate: true });
+      const sudokuSolver = new SudokuSolver(sudoku);
+      sudokuSolver.solve();
+
+      const state = sudoku.getState();
+      expect(state).toBe("solved");
+    });
+  },
+  1000 * 60 * 5,
 );

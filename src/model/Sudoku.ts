@@ -298,6 +298,16 @@ export default class Sudoku {
     return this.isFilled() && this.validateState().valid;
   }
 
+  public getState() {
+    if (!this.isFilled()) {
+      return "incomplete";
+    }
+    if (!this.validateState().valid) {
+      return "incorrect";
+    }
+    return "solved";
+  }
+
   public getNeighborOfCell(cell: Cell, direction: "up" | "down" | "right" | "left") {
     const currentIdx = cell.getCellIdx();
     const offset = this.getOffset(cell.getCellIdx(), direction);
