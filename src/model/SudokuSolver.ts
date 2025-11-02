@@ -14,6 +14,10 @@ import { XChainResolver } from "@/model/strategies/XChain";
 import type { Step } from "@/types";
 import { XCycleResolver } from "@/model/strategies/XCycle";
 import { XYCycleResolver } from "@/model/strategies/XYCycle";
+import { DiscontinousXCycle2 } from "@/model/strategies/DiscontinuousXCycle2";
+import { DiscontinousXCycle1 } from "@/model/strategies/DiscontinuousXCycle1";
+import { DiscontinousXYCycle1 } from "@/model/strategies/DiscontinuousXYCycle1";
+import { DiscontinousXYCycle2 } from "@/model/strategies/DiscontinuousXYCyle2";
 
 export class SudokuSolver {
   private sudoku: Sudoku;
@@ -46,34 +50,54 @@ export class SudokuSolver {
 
       // nice loops with single digit -> nice loops with single digit variance
       // -> single digit chains -> chains with one digit variance - of increasing lengths
+      new DiscontinousXCycle2(this.sudoku, 5),
       new XCycleResolver(this.sudoku, 4),
-      new XYCycleResolver(this.sudoku, 4),
+      new DiscontinousXCycle1(this.sudoku, 5),
       new XChainResolver(this.sudoku, 3),
+      new DiscontinousXYCycle2(this.sudoku, 5),
+      new XYCycleResolver(this.sudoku, 4),
+      new DiscontinousXYCycle1(this.sudoku, 5),
       new XYChainResolver(this.sudoku, 3),
+      new AIC(this.sudoku, 3),
 
-      new XYCycleResolver(this.sudoku, 6),
+      new DiscontinousXCycle2(this.sudoku, 7),
       new XCycleResolver(this.sudoku, 6),
+      new DiscontinousXCycle1(this.sudoku, 7),
       new XChainResolver(this.sudoku, 5),
+      new DiscontinousXYCycle1(this.sudoku, 5),
+      new XYCycleResolver(this.sudoku, 6),
+      new DiscontinousXYCycle2(this.sudoku, 5),
       new XYChainResolver(this.sudoku, 5),
-
-      new XCycleResolver(this.sudoku, 8),
-      new XYCycleResolver(this.sudoku, 8),
-      new XChainResolver(this.sudoku, 7),
-      new XYChainResolver(this.sudoku, 7),
-
-      new XCycleResolver(this.sudoku, 10),
-      new XYCycleResolver(this.sudoku, 10),
-      new XChainResolver(this.sudoku, 9),
-      new XYChainResolver(this.sudoku, 9),
-
-      new XCycleResolver(this.sudoku, 12),
-      new XYCycleResolver(this.sudoku, 12),
-      new XChainResolver(this.sudoku, 11),
-      new XYChainResolver(this.sudoku, 11),
-
       new AIC(this.sudoku, 5),
+
+      new DiscontinousXCycle2(this.sudoku, 9),
+      new XCycleResolver(this.sudoku, 8),
+      new DiscontinousXCycle1(this.sudoku, 9),
+      new XChainResolver(this.sudoku, 7),
+      new DiscontinousXYCycle2(this.sudoku, 7),
+      new XYCycleResolver(this.sudoku, 8),
+      new DiscontinousXYCycle1(this.sudoku, 7),
+      new XYChainResolver(this.sudoku, 7),
       new AIC(this.sudoku, 7),
+
+      new DiscontinousXCycle2(this.sudoku, 11),
+      new XCycleResolver(this.sudoku, 10),
+      new DiscontinousXCycle1(this.sudoku, 11),
+      new XChainResolver(this.sudoku, 9),
+      new DiscontinousXCycle2(this.sudoku, 11),
+      new XYCycleResolver(this.sudoku, 10),
+      new DiscontinousXCycle1(this.sudoku, 11),
+      new XYChainResolver(this.sudoku, 9),
       new AIC(this.sudoku, 9),
+
+      new DiscontinousXCycle2(this.sudoku, 13),
+      new XCycleResolver(this.sudoku, 12),
+      new DiscontinousXCycle1(this.sudoku, 13),
+      new XChainResolver(this.sudoku, 11),
+      new DiscontinousXYCycle2(this.sudoku, 13),
+      new XYCycleResolver(this.sudoku, 12),
+      new DiscontinousXYCycle1(this.sudoku, 13),
+      new XYChainResolver(this.sudoku, 11),
       new AIC(this.sudoku, 11),
     ];
   }

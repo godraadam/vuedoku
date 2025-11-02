@@ -56,7 +56,7 @@ export class XCycleResolver extends AbstractStrategy {
   }
 
   public getName(): string {
-    return `X-Cycle of length ${this.targetLength}`;
+    return `X-Cycle`;
   }
 
   public getDifficultyScore() {

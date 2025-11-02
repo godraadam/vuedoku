@@ -31,7 +31,7 @@ export class InferenceGraph {
   }
 
   public getWeakLinksOfNode(node: Candidate, filter?: NodeFilterFn) {
-    const nodes = this.weakGraph.get(node);
+    const nodes = [...this.weakGraph.get(node), ...this.strongGraph.get(node)];
     if (!filter) {
       return nodes;
     }
@@ -56,6 +56,15 @@ export class InferenceGraph {
 
   public *weakLinksOfNode(node: Candidate, filter?: NodeFilterFn) {
     for (const neighbor of this.weakGraph.get(node)) {
+      if (!filter) {
+        yield neighbor;
+      } else if (!filter(neighbor)) {
+        continue;
+      }
+      yield neighbor;
+    }
+    // strong links can act as weak links if needed
+    for (const neighbor of this.strongGraph.get(node)) {
       if (!filter) {
         yield neighbor;
       } else if (!filter(neighbor)) {

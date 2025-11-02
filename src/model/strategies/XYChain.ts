@@ -50,7 +50,7 @@ export class XYChainResolver extends AbstractStrategy {
   }
 
   public getName(): string {
-    return `XY-Chain of length ${this.targetLength}`;
+    return `XY-Chain`;
   }
 
   public getDifficultyScore() {

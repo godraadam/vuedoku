@@ -13,7 +13,7 @@ import Candidate from "@/model/Candidate";
 function useState() {
   const route = useRoute();
   const input = computed(() => route.params.input as string | undefined);
-  const values = computed(() => input.value?.split("").map((c) => Number(c) - 1));
+  const values = computed(() => input.value?.split("").map((c) => (c == "." ? -1 : Number(c) - 1)));
   const difficulty = computed(
     () =>
       (difficulties.includes((route.params.difficulty as Difficulty) ?? "")
@@ -51,10 +51,7 @@ function useState() {
     nextStep.value?.type == "eliminate" ? nextStep.value.candidates : [],
   );
 
-  const eliminationParticipants = computed(() =>
-    nextStep.value?.type == "eliminate" ? (nextStep.value.participants ?? []) : [],
-  );
-
+  const eliminationParticipants = computed(() => nextStep.value?.participants ?? []);
   const isSolved = computed(() => sudoku.value.isProperSolved());
   const nextStep = computed(() => sudokuSolver.value.getNextStep());
   const focusedCell = ref(sudoku.value.getCellByIdx(0)) as Ref<Cell>;

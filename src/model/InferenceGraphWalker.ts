@@ -32,11 +32,14 @@ export class InferenceGraphWalker {
       const current = queue.pop()!;
       const currentDepth = depthMap.get(current)!;
       const chain = chainMap.get(current) ?? [];
+      visited.add(current);
+
       if (currentDepth >= targetLength) {
         return chain;
       }
       const loopBack = endOnSameNode && currentDepth == targetLength - 1;
       const loopBackDigit = endOnSameDigit && currentDepth == targetLength - 1;
+
       const nodeFilter: NodeFilterFn = (node) =>
         (loopBack ? node == start : !visited.has(node)) &&
         (loopBackDigit ? node.getDigit() == start.getDigit() : true) &&
@@ -51,7 +54,6 @@ export class InferenceGraphWalker {
       for (const next of links) {
         depthMap.set(next, currentDepth + 1);
         chainMap.set(next, [...chain, { from: current, to: next, type: nextLinkType }]);
-        visited.add(next);
         nextLinkMap.set(next, nextLinkType == "weak" ? "strong" : "weak");
         queue.push(next);
       }

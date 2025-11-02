@@ -8,6 +8,8 @@ export type UnitType = "row" | "col" | "box" | "xchute" | "ychute";
 export type PlacementResult =
   | {
       place: Candidate;
+      chain?: InferenceChain;
+      participants?: Array<Candidate>;
       reason: string;
     }
   | undefined;

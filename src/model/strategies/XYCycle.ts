@@ -2,6 +2,7 @@ import { AbstractStrategy } from "@/model/strategies/AbstractStrategy";
 import { InferenceGraphWalker } from "@/model/InferenceGraphWalker";
 import type Sudoku from "@/model/Sudoku";
 import type { Step } from "@/types";
+import type Candidate from "@/model/Candidate";
 
 export class XYCycleResolver extends AbstractStrategy {
   private targetLength: number;
@@ -23,16 +24,20 @@ export class XYCycleResolver extends AbstractStrategy {
         (node) => node.getCell().getCandidateCount() == 2,
       );
       if (chain) {
-        const startCell = chain.at(0)!.from.getCell();
-        const endCell = chain.at(-1)!.to.getCell();
-        const cellsSeenByBoth = this.sudoku
-          .getCellsSeenBy(startCell)
-          .filter((cell) => cell.canSee(endCell));
+        const weakLinks = chain
+          .filter((it) => it.type == "weak")
+          .filter((it) => it.from.getCell() != it.to.getCell());
+        const candidates: Array<Candidate> = [];
+        for (const link of weakLinks) {
+          const cells = this.sudoku
+            .getCellsSeenBy(link.from.getCell())
+            .filter((cell) => cell.canSee(link.to.getCell()) && cell != link.to.getCell());
 
-        const candidates = cellsSeenByBoth
-          .filter((cell) => cell.hasCandidate(candidate.getDigit()))
-          .map((cell) => cell.getCandidate(candidate.getDigit()))
-          .filter((candidate) => !chain.some((it) => it.from == candidate || it.to == candidate));
+          const _candidates = cells
+            .filter((cell) => cell.hasCandidate(link.from.getDigit()))
+            .map((cell) => cell.getCandidate(link.from.getDigit()));
+          candidates.push(..._candidates);
+        }
 
         if (candidates.length > 0) {
           return {
@@ -50,7 +55,7 @@ export class XYCycleResolver extends AbstractStrategy {
   }
 
   public getName(): string {
-    return `Nice XY-Cycle of length ${this.targetLength}`;
+    return `XY-Cycle`;
   }
 
   public getDifficultyScore() {

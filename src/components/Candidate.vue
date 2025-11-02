@@ -79,7 +79,10 @@ function handleClick(e: PointerEvent) {
       props.candidate.getDigit(),
     );
   } else {
-    sudoku.value.setCandidate(props.candidate, !props.candidate.isSet(), true, true);
+    const state = autoCandidates.value
+      ? !props.candidate.isSet()
+      : !sudoku.value.getUserSetCandidates().get(props.candidate);
+    sudoku.value.setCandidate(props.candidate, state, true, true);
   }
 }
 

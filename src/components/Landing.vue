@@ -1,15 +1,15 @@
 <template>
-  <main class="h-screen w-screen flex items-center justify-center px-3">
+  <main class="h-svh w-screen flex md:items-center justify-center px-3">
     <div class="flex flex-col gap-8 w-lg">
-      <h1 class="text-7xl font-light mt-8 md:mt-0">Sudoku · 数独</h1>
+      <h1 class="md:text-7xl text-5xl font-extralight mt-16 md:mt-0">Sudoku · 数独</h1>
 
       <div class="flex flex-col gap-2">
-        <label for="input" class="text-sm font-medium text-gray-900">Play random sudoku</label>
+        <label class="text-sm font-light text-gray-900">Play random sudoku</label>
         <div class="grid grid-cols-2 gap-2">
           <button
             v-for="option of difficultyOptions"
             :key="option.to"
-            :class="`text-gray-600 rounded-xl flex items-center gap-2 justify-center px-3 py-2 w-full text-center cursor-pointer border border-gray-300 hover:border-${option.color}-500 transition-colors`"
+            :class="`text-gray-600 rounded-xl flex items-center gap-2 justify-center px-3 py-2 w-full text-center cursor-pointer border border-gray-400 hover:border-${option.color}-500 transition-colors`"
             @click="() => onPlay(option.to)"
           >
             {{ option.name }}
@@ -23,19 +23,19 @@
         <div class="h-px w-full bg-gray-700" />
       </div>
       <div class="flex flex-col gap-1">
-        <label for="input" class="text-sm font-medium text-gray-900">Enter sudoku string</label>
+        <label for="input" class="text-sm font-light text-gray-900">Enter sudoku string</label>
         <input
           v-model="sudokuString"
           id="input"
           :data-valid="!blurred || isValid"
           placeholder="Ex. 0802004005700001000...00003000018007009050"
-          class="rounded-lg w-full px-4 py-2 border border-gray-600 text-gray-900 transition duration-300 placeholder:text-gray-400 focus:border-gray-900 data-[valid=false]:border-red-500 focus:shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05),0px_0px_0px_4px_#F5F5F5] focus:outline-none"
+          class="rounded-lg w-full px-4 py-2 border border-gray-400 text-gray-900 transition duration-300 placeholder:text-gray-400 focus:border-gray-700 data-[valid=false]:border-red-500 focus:outline-none"
           @blur="blurred = true"
         />
       </div>
       <button
         :disabled="!isValid"
-        class="px-4 py-2 bg-black text-white hover:bg-gray-900 transition duration-300 rounded-lg cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-gray-900"
+        class="px-4 py-2 border border-gray-400 text-black hover:border-gray-700 transition duration-300 rounded-lg cursor-pointer disabled:cursor-not-allowed disabled:hover:border-gray-400"
         @click="() => onPlay('custom', sudokuString)"
       >
         Play Custom Sudoku
@@ -60,7 +60,7 @@ const sudokuString = ref("");
 const blurred = ref(false);
 const isValid = computed(
   () =>
-    sudokuString.value.length == 81 && sudokuString.value.split("").every((ch) => /[0-9]/.test(ch)),
+    sudokuString.value.length == 81 && sudokuString.value.split("").every((ch) => /[.\d]/.test(ch)),
 );
 
 const difficultyOptions = difficulties
@@ -73,7 +73,7 @@ const difficultyOptions = difficulties
 
 async function onPlay(difficulty: Difficulty, sudokuString?: string) {
   if (difficulty == "custom" && sudokuString) {
-    return await router.push(`custom/${sudokuString}`);
+    return await router.push(`custom/${sudokuString.trim().replace(/\./g, "0")}`);
   } else {
     return await router.push(`/${difficulty}`);
   }
