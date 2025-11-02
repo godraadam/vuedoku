@@ -1,5 +1,5 @@
 <template>
-  <footer class="w-full flex py-3 px-4 justify-end md:absolute md:bottom-0">
+  <footer class="w-full flex py-3 px-4 justify-end absolute bottom-0">
     <div class="flex gap-1 text-sm font-light">
       made by
       <a

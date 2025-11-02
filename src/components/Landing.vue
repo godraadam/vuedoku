@@ -1,7 +1,7 @@
 <template>
-  <main class="h-dvh w-screen flex items-center justify-center px-3">
+  <main class="h-svh w-screen flex md:items-center justify-center px-3">
     <div class="flex flex-col gap-8 w-lg">
-      <h1 class="md:text-7xl text-5xl font-extralight mt-2 md:mt-0">Sudoku · 数独</h1>
+      <h1 class="md:text-7xl text-5xl font-extralight mt-16 md:mt-0">Sudoku · 数独</h1>
 
       <div class="flex flex-col gap-2">
         <label class="text-sm font-light text-gray-900">Play random sudoku</label>

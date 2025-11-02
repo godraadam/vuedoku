@@ -36,7 +36,7 @@ export class DiscontinousXYCycle1 extends AbstractStrategy {
     return undefined;
   }
 
-  public getName(): string {
+  public getName() {
     return `Discontinuous XY-Cycle type 1`;
   }
 
@@ -44,7 +44,7 @@ export class DiscontinousXYCycle1 extends AbstractStrategy {
     return 5;
   }
 
-  public getLink(): string | undefined {
-    return undefined;
+  public getLink() {
+    return "https://www.taupierbw.be/SudokuCoach/SC_XYChain.shtml";
   }
 }

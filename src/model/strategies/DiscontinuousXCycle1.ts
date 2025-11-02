@@ -39,7 +39,7 @@ export class DiscontinousXCycle1 extends AbstractStrategy {
     return undefined;
   }
 
-  public getName(): string {
+  public getName() {
     return `Discontinuous X-Cycle type 1`;
   }
 
@@ -47,7 +47,7 @@ export class DiscontinousXCycle1 extends AbstractStrategy {
     return 4.5;
   }
 
-  public getLink(): string | undefined {
+  public getLink() {
     return "https://www.taupierbw.be/SudokuCoach/SC_XCycle.shtml";
   }
 }
