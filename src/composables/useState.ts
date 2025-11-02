@@ -51,10 +51,7 @@ function useState() {
     nextStep.value?.type == "eliminate" ? nextStep.value.candidates : [],
   );
 
-  const eliminationParticipants = computed(() =>
-    nextStep.value?.type == "eliminate" ? (nextStep.value.participants ?? []) : [],
-  );
-
+  const eliminationParticipants = computed(() => nextStep.value?.participants ?? []);
   const isSolved = computed(() => sudoku.value.isProperSolved());
   const nextStep = computed(() => sudokuSolver.value.getNextStep());
   const focusedCell = ref(sudoku.value.getCellByIdx(0)) as Ref<Cell>;

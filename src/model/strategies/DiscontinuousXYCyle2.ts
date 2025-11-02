@@ -1,0 +1,50 @@
+import { AbstractStrategy } from "@/model/strategies/AbstractStrategy";
+import { InferenceGraphWalker } from "@/model/InferenceGraphWalker";
+import type Sudoku from "@/model/Sudoku";
+import type { Step } from "@/types";
+
+export class DiscontinousXYCycle2 extends AbstractStrategy {
+  private targetLength: number;
+
+  constructor(sudoku: Sudoku, targetLength: number) {
+    super(sudoku);
+    this.targetLength = targetLength;
+  }
+
+  public resolve(): Step | undefined {
+    for (const candidate of this.sudoku.getAllSetCandidates()) {
+      const chainWalker = new InferenceGraphWalker(this.sudoku.getInferenceGraph());
+      const chain = chainWalker.getChain(
+        candidate,
+        this.targetLength,
+        "weak",
+        true,
+        true,
+        (node) => node.getCell().getCandidateCount() == 2,
+      );
+      if (chain) {
+        return {
+          reporter: this,
+          type: "place",
+          reason: this.getName(),
+          chain,
+          place: candidate,
+          participants: [chain[0].from, ...chain.map((it) => it.to)],
+        };
+      }
+    }
+    return undefined;
+  }
+
+  public getName(): string {
+    return `Discontinuous XY-Cycle type 2`;
+  }
+
+  public getDifficultyScore() {
+    return 5;
+  }
+
+  public getLink(): string | undefined {
+    return undefined;
+  }
+}

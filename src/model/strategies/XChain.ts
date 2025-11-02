@@ -53,7 +53,7 @@ export class XChainResolver extends AbstractStrategy {
   }
 
   public getName(): string {
-    return `X-Chain of length ${this.targetLength}`;
+    return `X-Chain`;
   }
 
   public getDifficultyScore() {

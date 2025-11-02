@@ -193,17 +193,9 @@ export default class Sudoku {
 
     const candidatesToReset: Array<Candidate> = [];
     candidatesToReset.push(
-      ...seenCandidates.filter(
-        (candidate) =>
-          this.userSetCandidatesCache.get(candidate) != false &&
-          this.getCellsSeenBy(candidate.getCell()).every((_cell) => _cell.getValue() != digit),
-      ),
+      ...seenCandidates.filter((candidate) => this.userSetCandidatesCache.get(candidate) != false),
     );
-    candidatesToReset.push(
-      ...candidatesInCell.filter((candidate) =>
-        seenCells.every((cell) => cell.getValue() != candidate.getDigit()),
-      ),
-    );
+    candidatesToReset.push(...candidatesInCell);
     candidatesToReset.forEach((candidate) => this.setCandidate(candidate, true));
     this.placedValueCounts[digit]--;
     this.inferenceGraph.buildGraph();
@@ -212,14 +204,24 @@ export default class Sudoku {
   public setCandidate(
     candidate: Candidate,
     isSet: boolean,
-    isEliminated = false,
+    userInput = false,
     rebuildGraph = false,
   ) {
-    if (isEliminated) {
+    if (isSet) {
+      if (candidate.getCell().isFilled()) {
+        return;
+      }
+      // check for candidate conflict
+      const cellsSeen = this.getCellsSeenBy(candidate.getCell());
+      if (cellsSeen.some((cell) => cell.getValue() == candidate.getDigit())) {
+        return;
+      }
+    }
+    if (userInput) {
       this.userSetCandidatesCache.set(candidate, isSet);
     }
     candidate.setState(isSet);
-    if (rebuildGraph) {
+    if (rebuildGraph && !(userInput && isSet)) {
       this.inferenceGraph.buildGraph();
     }
   }

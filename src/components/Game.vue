@@ -55,6 +55,7 @@ const {
   sudoku,
   focusedCell,
   focusedCandidate,
+  autoCandidates,
 } = useState();
 
 function onMobileInput(type: "remove" | "place" | "eliminate", digit: number) {
@@ -63,7 +64,10 @@ function onMobileInput(type: "remove" | "place" | "eliminate", digit: number) {
   }
   if (type == "eliminate") {
     const candidate = focusedCell.value.getCandidate(digit);
-    return sudoku.value.setCandidate(candidate, !candidate.isSet(), true, true);
+    const state = autoCandidates.value
+      ? !candidate.isSet()
+      : !sudoku.value.getUserSetCandidates().get(candidate);
+    return sudoku.value.setCandidate(candidate, state, true, true);
   } else if (type == "place") {
     sudoku.value.placeValueInCell(focusedCell.value.getCellIdx(), digit);
   } else {

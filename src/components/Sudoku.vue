@@ -46,11 +46,10 @@ const {
   highlightedDigit,
   autoHint,
   nextStep,
+  autoCandidates,
 } = useState();
 
-const chain = computed(() =>
-  nextStep.value?.type == "eliminate" ? nextStep.value.chain : undefined,
-);
+const chain = computed(() => nextStep.value?.chain);
 
 const cells = computed(() => sudoku.value.getCells());
 
@@ -77,7 +76,10 @@ useKeyboardEvent(
       ].includes(e.code)
     ) {
       const candidate = focusedCell.value.getCandidate(Number(e.code.replace("Digit", "")) - 1);
-      return sudoku.value.setCandidate(candidate, !candidate.isSet(), true, true);
+      const state = autoCandidates.value
+        ? !candidate.isSet()
+        : !sudoku.value.getUserSetCandidates().get(candidate);
+      return sudoku.value.setCandidate(candidate, state, true, true);
     }
     if (["1", "2", "3", "4", "5", "6", "7", "8", "9"].includes(e.key)) {
       return sudoku.value.placeValueInCell(focusedCell.value.getCellIdx(), Number(e.key) - 1);

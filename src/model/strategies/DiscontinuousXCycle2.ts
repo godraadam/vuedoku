@@ -1,10 +1,9 @@
 import { AbstractStrategy } from "@/model/strategies/AbstractStrategy";
 import type Sudoku from "@/model/Sudoku";
 import { InferenceGraphWalker } from "@/model/InferenceGraphWalker";
-import type Candidate from "@/model/Candidate";
 import type { Step } from "@/types";
 
-export class XCycleResolver extends AbstractStrategy {
+export class DiscontinousXCycle2 extends AbstractStrategy {
   private targetLength: number;
 
   constructor(sudoku: Sudoku, targetLength: number) {
@@ -16,6 +15,7 @@ export class XCycleResolver extends AbstractStrategy {
     for (const digit of this.sudoku.digits()) {
       for (const candidate of this.sudoku.getAllSetCandidatesOfDigit(digit)) {
         const chainWalker = new InferenceGraphWalker(this.sudoku.getInferenceGraph());
+
         const chain = chainWalker.getChain(
           candidate,
           this.targetLength,
@@ -25,29 +25,14 @@ export class XCycleResolver extends AbstractStrategy {
           (node) => node.getDigit() == digit,
         );
         if (chain) {
-          const weakLinks = chain.filter((it) => it.type == "weak");
-          const candidates: Array<Candidate> = [];
-          for (const link of weakLinks) {
-            const cells = this.sudoku
-              .getCellsSeenBy(link.from.getCell())
-              .filter((cell) => cell.canSee(link.to.getCell()) && cell != link.to.getCell());
-
-            const _candidates = cells
-              .filter((cell) => cell.hasCandidate(digit))
-              .map((cell) => cell.getCandidate(digit));
-            candidates.push(..._candidates);
-          }
-
-          if (candidates.length > 0) {
-            return {
-              reporter: this,
-              type: "eliminate",
-              reason: "X-Cycle",
-              chain,
-              candidates,
-              participants: [chain[0].from, ...chain.map((it) => it.to)],
-            };
-          }
+          return {
+            reporter: this,
+            type: "place",
+            reason: "X-Cycle",
+            chain,
+            place: candidate,
+            participants: [chain[0].from, ...chain.map((it) => it.to)],
+          };
         }
       }
     }
@@ -56,7 +41,7 @@ export class XCycleResolver extends AbstractStrategy {
   }
 
   public getName(): string {
-    return `X-Cycle`;
+    return `Discontinuous X-Cycle type 2`;
   }
 
   public getDifficultyScore() {
