@@ -53,7 +53,7 @@ function useState() {
 
   const eliminationParticipants = computed(() => nextStep.value?.participants ?? []);
   const isSolved = computed(() => sudoku.value.isProperSolved());
-  const nextStep = computed(() => sudokuSolver.value.getNextStep());
+  const nextStep = computed(() => (!isSolved.value ? sudokuSolver.value.getNextStep() : undefined));
   const focusedCell = ref(sudoku.value.getCellByIdx(0)) as Ref<Cell>;
   const focusedCandidate = ref() as Ref<Candidate>;
   const highlightedDigit = ref<number>();
@@ -68,11 +68,13 @@ function useState() {
   }
 
   watch(values, reset);
-  watch(nextStep, () => {
-    if (!autoHint.value) {
-      showHint.value = false;
-    } else {
-      hintsUsed.value += 1;
+  watch(nextStep, (_, prev) => {
+    if (prev != undefined) {
+      if (!autoHint.value) {
+        showHint.value = false;
+      } else {
+        hintsUsed.value += 1;
+      }
     }
   });
 

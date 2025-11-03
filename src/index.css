@@ -1,7 +1,20 @@
 @import "tailwindcss";
-@source inline(
-  "{data-[active=true]:,}{hover:,disabled:,}{text,bg,border,}-{red,green,blue,gray,amber,fuchsia}-{50,{100..900..100},950}"
-);
+
+@font-face {
+  font-family: "Satoshi";
+  src:
+    local("Satoshi"),
+    url("/fonts/Satoshi-Variable.ttf") format("truetype");
+  font-weight: 300 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@source inline("{data-[active=true]:,}{hover:,disabled:,}{text,bg,border,}-{red,green,blue,gray,amber,fuchsia}-{50,{100..900..100},950}");
+
+@theme {
+  --font-satoshi: "Satoshi", "sans-serif";
+}
 
 @theme inline {
   --color-theme-50: var(--var-color-theme-50);

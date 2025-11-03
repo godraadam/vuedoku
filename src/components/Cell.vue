@@ -1,12 +1,18 @@
 <template>
   <div
-    :class="`group relative flex aspect-square min-w-10 items-center justify-center border border-gray-300 p-0.5 md:min-w-22 lg:p-2 group${isAtBottomEdge ? 'border-b-gray-700' : ''}${isAtTopEdge ? 'border-t-gray-700' : ''}${isAtLeftEdge ? 'border-l-gray-700' : ''}${isAtRightEdge ? 'border-r-gray-700' : ''}${isFocused ? 'bg-theme-200' : ''}${focusedCellSharedUnitCount == 2 ? 'bg-theme-100' : ''}${focusedCellSharedUnitCount == 1 ? 'bg-theme-50' : ''}`"
+    :class="
+      cn(
+        'group relative flex aspect-square min-w-10 items-center justify-center border border-gray-300 p-0.5 md:min-w-22 lg:p-2',
+        cellHoverClass,
+        borderClass,
+      )
+    "
     @mouseenter="focusedCell = cell"
     @click="focusedCell = cell"
   >
     <div
       v-if="cell.isFilled()"
-      class="z-10 flex h-full w-full items-center justify-center text-2xl font-semibold md:text-5xl"
+      class="font-satoshi z-10 flex h-full w-full items-center justify-center text-2xl font-semibold md:text-5xl"
       :class="cell.isGiven() ? 'text-gray-900' : 'text-theme-600'"
       @dblclick="handleDoubleClick"
     >
@@ -28,9 +34,11 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
+
 import type CellModel from "@/model/Cell";
 import Candidate from "@/components/Candidate.vue";
 import useState from "@/composables/useState";
+import { cn } from "@/util";
 
 const props = defineProps<{
   cell: CellModel;
@@ -53,6 +61,21 @@ const focusedCellSharedUnitCount = computed(() =>
       props.cell.getUnitIdx(unitType) == focusedCell.value.getUnitIdx(unitType) ? count + 1 : count,
     0,
   ),
+);
+
+const cellHoverClass = computed(() =>
+  isFocused.value
+    ? "bg-theme-200"
+    : focusedCellSharedUnitCount.value == 2
+      ? "bg-theme-100"
+      : focusedCellSharedUnitCount.value == 1
+        ? "bg-theme-50"
+        : "",
+);
+
+const borderClass = computed(
+  () =>
+    `${isAtBottomEdge.value ? " border-b-gray-700" : ""}${isAtTopEdge.value ? " border-t-gray-700" : ""}${isAtLeftEdge.value ? " border-l-gray-700" : ""}${isAtRightEdge.value ? " border-r-gray-700" : ""}`,
 );
 
 function handleDoubleClick() {

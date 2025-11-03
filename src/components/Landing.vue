@@ -1,7 +1,7 @@
 <template>
   <main class="flex h-svh w-screen justify-center px-3 md:items-center">
     <div class="flex w-lg flex-col gap-8">
-      <h1 class="mt-16 text-5xl font-extralight md:mt-0 md:text-7xl">Sudoku · 数独</h1>
+      <h1 class="font-satoshi mt-16 text-5xl font-extralight md:mt-0 md:text-7xl">Sudoku · 数独</h1>
 
       <div class="flex flex-col gap-2">
         <label class="text-sm font-light text-gray-900">Play random sudoku</label>
@@ -29,7 +29,7 @@
           id="input"
           :data-valid="!blurred || isValid"
           placeholder="Ex. 0802004005700001000...00003000018007009050"
-          class="w-full rounded-lg border border-gray-400 px-4 py-2 text-gray-900 transition duration-300 placeholder:text-gray-400 focus:border-gray-700 focus:outline-none data-[valid=false]:border-red-500"
+          class="placeholder:text-thin w-full rounded-lg border border-gray-400 px-4 py-2 text-gray-900 transition duration-300 placeholder:text-gray-400 focus:border-gray-700 focus:outline-none data-[valid=false]:border-red-500"
           @blur="blurred = true"
         />
       </div>
