@@ -37,7 +37,7 @@ const rootRef = useTemplateRef("root");
 const isOn = computed(() =>
   autoCandidates.value
     ? props.candidate.isSet()
-    : sudoku.value.getUserSetCandidates().get(props.candidate),
+    : sudoku.value.getUserSetCandidates().get(props.candidate.getCandidateIdx()),
 );
 
 const isHighLighted = computed(
@@ -81,7 +81,7 @@ function handleClick(e: PointerEvent) {
   } else {
     const state = autoCandidates.value
       ? !props.candidate.isSet()
-      : !sudoku.value.getUserSetCandidates().get(props.candidate);
+      : !sudoku.value.getUserSetCandidates().get(props.candidate.getCandidateIdx());
     sudoku.value.setCandidate(props.candidate, state, true, true);
   }
 }
