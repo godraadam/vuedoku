@@ -1,33 +1,33 @@
 <template>
-  <div id="mobile-keyboard-wrapper" class="h-fit mt-6 space-y-2">
+  <div id="mobile-keyboard-wrapper" class="mt-6 h-fit space-y-2">
     <div class="flex gap-2">
       <button
-        class="font-medium text-gray-900 data-[mode=normal]:text-theme-600"
+        class="data-[mode=normal]:text-theme-600 font-medium text-gray-900"
         :data-mode="mode"
         @click="mode = 'normal'"
       >
         Normal
       </button>
       <button
-        class="font-medium text-gray-900 data-[mode=candidate]:text-theme-600"
+        class="data-[mode=candidate]:text-theme-600 font-medium text-gray-900"
         :data-mode="mode"
         @click="mode = 'candidate'"
       >
         Candidate
       </button>
     </div>
-    <div class="w-full grid grid-cols-5 grid-rows-2 gap-1.5">
+    <div class="grid w-full grid-cols-5 grid-rows-2 gap-1.5">
       <button
         v-for="i in 9"
         :data-mode="mode"
         :key="i"
-        class="flex items-center justify-center border-2 border-gray-300 text-gray-900 text-2xl h-12 w-full data-[mode=candidate]:text-sm"
+        class="flex h-12 w-full items-center justify-center border-2 border-gray-300 text-2xl text-gray-900 data-[mode=candidate]:text-sm"
         @click="handleClick(i)"
       >
         {{ i }}
       </button>
       <button
-        class="flex items-center justify-center border-2 border-gray-300 text-gray-900 text-2xl h-12 w-full"
+        class="flex h-12 w-full items-center justify-center border-2 border-gray-300 text-2xl text-gray-900"
         @click="emits('input', 'remove', 0)"
       >
         X

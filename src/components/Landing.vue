@@ -1,7 +1,7 @@
 <template>
-  <main class="h-svh w-screen flex md:items-center justify-center px-3">
-    <div class="flex flex-col gap-8 w-lg">
-      <h1 class="md:text-7xl text-5xl font-extralight mt-16 md:mt-0">Sudoku · 数独</h1>
+  <main class="flex h-svh w-screen justify-center px-3 md:items-center">
+    <div class="flex w-lg flex-col gap-8">
+      <h1 class="mt-16 text-5xl font-extralight md:mt-0 md:text-7xl">Sudoku · 数独</h1>
 
       <div class="flex flex-col gap-2">
         <label class="text-sm font-light text-gray-900">Play random sudoku</label>
@@ -9,7 +9,7 @@
           <button
             v-for="option of difficultyOptions"
             :key="option.to"
-            :class="`text-gray-600 rounded-xl flex items-center gap-2 justify-center px-3 py-2 w-full text-center cursor-pointer border border-gray-400 hover:border-${option.color}-500 transition-colors`"
+            :class="`flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-gray-400 px-3 py-2 text-center text-gray-600 hover:border-${option.color}-500 transition-colors`"
             @click="() => onPlay(option.to)"
           >
             {{ option.name }}
@@ -17,7 +17,7 @@
           </button>
         </div>
       </div>
-      <div class="flex gap-3 items-center justify-between text-sm text-gray-900">
+      <div class="flex items-center justify-between gap-3 text-sm text-gray-900">
         <div class="h-px w-full bg-gray-700" />
         Or
         <div class="h-px w-full bg-gray-700" />
@@ -29,13 +29,13 @@
           id="input"
           :data-valid="!blurred || isValid"
           placeholder="Ex. 0802004005700001000...00003000018007009050"
-          class="rounded-lg w-full px-4 py-2 border border-gray-400 text-gray-900 transition duration-300 placeholder:text-gray-400 focus:border-gray-700 data-[valid=false]:border-red-500 focus:outline-none"
+          class="w-full rounded-lg border border-gray-400 px-4 py-2 text-gray-900 transition duration-300 placeholder:text-gray-400 focus:border-gray-700 focus:outline-none data-[valid=false]:border-red-500"
           @blur="blurred = true"
         />
       </div>
       <button
         :disabled="!isValid"
-        class="px-4 py-2 border border-gray-400 text-black hover:border-gray-700 transition duration-300 rounded-lg cursor-pointer disabled:cursor-not-allowed disabled:hover:border-gray-400"
+        class="cursor-pointer rounded-lg border border-gray-400 px-4 py-2 text-black transition duration-300 hover:border-gray-700 disabled:cursor-not-allowed disabled:hover:border-gray-400"
         @click="() => onPlay('custom', sudokuString)"
       >
         Play Custom Sudoku

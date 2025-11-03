@@ -1,6 +1,6 @@
 <template>
   <Modal :is-open @close="emits('close')">
-    <div class="w-[728px] h-[680px]">
+    <div class="h-[680px] w-[728px]">
       <h1 class="text-3xl font-medium">Settings</h1>
       <div class="space-y-1">
         <div class="flex items-center gap-2">
@@ -8,7 +8,7 @@
             v-model="autoCandidates"
             type="checkbox"
             id="auto-candidates"
-            class="rounded-md accent-theme-600 size-3.5"
+            class="accent-theme-600 size-3.5 rounded-md"
           />
           <label for="auto-candidates" class="text-sm text-gray-900">Auto Candidates</label>
         </div>
@@ -17,7 +17,7 @@
             v-model="autoHint"
             type="checkbox"
             id="auto-hints"
-            class="rounded-md accent-theme-600 size-3.5"
+            class="accent-theme-600 size-3.5 rounded-md"
           />
           <label for="auto-hints" class="text-sm text-gray-900">Auto Hints</label>
         </div>

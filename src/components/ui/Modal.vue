@@ -10,7 +10,7 @@
       <div
         :class="
           cn(
-            'relative z-51 max-h-[95dvh] rounded-lg w-fit max-w-[95vw] py-3 md:py-6 px-4 md:px-8 overflow-auto bg-white shadow-lg ',
+            'relative z-51 max-h-[95dvh] w-fit max-w-[95vw] overflow-auto rounded-lg bg-white px-4 py-3 shadow-lg md:px-8 md:py-6',
             attrs.class ?? '',
           )
         "

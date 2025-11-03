@@ -2,7 +2,7 @@
   <button
     :class="
       cn(
-        'w-fit h-fit p-1.5 flex gap-1.5 items-center justify-center hover:bg-gray-200 transition-colors text-gray-700 hover:text-theme-500 cursor-pointer rounded-lg focus:outline-none focus:border-theme-500',
+        'hover:text-theme-500 focus:border-theme-500 flex h-fit w-fit cursor-pointer items-center justify-center gap-1.5 rounded-lg p-1.5 text-gray-700 transition-colors hover:bg-gray-200 focus:outline-none',
         attrs.class ?? '',
       )
     "

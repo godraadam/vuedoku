@@ -2,27 +2,27 @@
   <div
     v-if="running || isSolved"
     id="sudoku-grid-wrapper"
-    class="grid grid-cols-9 grid-rows-9 w-full"
+    class="grid w-full grid-cols-9 grid-rows-9"
   >
     <Cell v-for="cell of cells" :key="cell.getCellIdx()" :cell />
   </div>
-  <div v-else class="grid grid-cols-9 grid-rows-9 w-full relative">
+  <div v-else class="relative grid w-full grid-cols-9 grid-rows-9">
     <div
       v-for="i of cells.length"
       :key="i"
-      class="aspect-square min-w-10 md:min-w-22 p-0.5 lg:p-2 border border-transparent data-[top=true]:border-t-gray-500 data-[left=true]:border-l-gray-500 data-[bottom=true]:border-b-gray-500 data-[right=true]:border-r-gray-500"
+      class="aspect-square min-w-10 border border-transparent p-0.5 data-[bottom=true]:border-b-gray-500 data-[left=true]:border-l-gray-500 data-[right=true]:border-r-gray-500 data-[top=true]:border-t-gray-500 md:min-w-22 lg:p-2"
       :data-top="Math.floor((i - 1) / 9) == 0"
       :data-left="Math.floor((i - 1) % 9) == 0"
       :data-bottom="Math.floor((i - 1) / 9) == 8"
       :data-right="Math.floor((i - 1) % 9) == 8"
     />
     <PauseIcon
-      class="absolute text-gray-900 size-32 left-1/2 -translate-x-1/2 -translate-y-1/2 top-1/2"
+      class="absolute top-1/2 left-1/2 size-32 -translate-x-1/2 -translate-y-1/2 text-gray-900"
       @click="running = true"
     />
   </div>
   <Graph />
-  <Chain v-if="chain && autoHint" :chain="chain" />
+  <Chain v-if="chain && showHint" :chain="chain" />
 </template>
 
 <script setup lang="ts">
@@ -45,6 +45,7 @@ const {
   autoHighlight,
   highlightedDigit,
   autoHint,
+  showHint,
   nextStep,
   autoCandidates,
 } = useState();

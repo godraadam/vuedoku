@@ -1,6 +1,6 @@
 <template>
   <RouterView />
-  <Footer class="hidden md:flex"/>
+  <Footer class="hidden md:flex" />
 </template>
 
 <script setup lang="ts">

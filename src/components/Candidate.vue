@@ -3,10 +3,10 @@
     ref="root"
     :class="
       cn(
-        'z-10 text-xs md:text-base pointer-events-none md:pointer-events-auto font-thin text-transparent group-hover:text-gray-500 border-gray-500 rounded-full flex justify-center items-center cursor-pointer hover:text-gray-900 transition-colors duration-100 ease-out',
-        isOn && 'text-gray-500 font-light group-hover:text-gray-900',
+        'pointer-events-none z-10 flex cursor-pointer items-center justify-center rounded-full border-gray-500 text-xs font-thin text-transparent transition-colors duration-100 ease-out group-hover:text-gray-500 hover:text-gray-900 md:pointer-events-auto md:text-base',
+        isOn && 'font-light text-gray-500 group-hover:text-gray-900',
         canBeRemoved && 'crossed',
-        canBePlaced && 'text-white bg-theme-600 group-hover:text-white hover:text-white',
+        canBePlaced && 'bg-theme-600 text-white group-hover:text-white hover:text-white',
         isHighLighted && 'text-theme-600 font-bold',
         isParticipant && 'border',
       )
@@ -44,7 +44,8 @@ const isHighLighted = computed(
   () =>
     !canBePlaced.value &&
     !canBeRemoved.value &&
-    props.candidate.isSet() &&
+    (props.candidate.isSet() ||
+      sudoku.value.getUserSetCandidates().get(props.candidate.getCandidateIdx())) &&
     highlightedDigit.value == props.candidate.getDigit(),
 );
 

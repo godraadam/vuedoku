@@ -1,5 +1,5 @@
 <template>
-  <div class="h-svh pt-2 md:pt-0 md:flex md:items-center md:justify-center gap-8 px-2">
+  <div class="h-svh gap-8 px-2 pt-2 md:flex md:items-center md:justify-center md:pt-0">
     <div id="confetti-wrapper" class="absolute top-1/2 flex justify-center">
       <ConfettiExplosion
         v-if="isSolved"
@@ -17,7 +17,7 @@
     <div class="space-y-2">
       <GameControls />
       <Sudoku />
-      <div v-if="showHint" class="font-light text-sm md:hidden flex items-center gap-1">
+      <div v-if="showHint" class="flex items-center gap-1 text-sm font-light md:hidden">
         {{ nextStep ? nextStep.reporter.getName() : isSolved ? "Solved" : "Stuck" }}
         <a v-if="nextStep?.reporter.getLink()" :href="nextStep?.reporter.getLink()" target="_blank"
           ><IconButton><InfoIcon class="size-4" /> </IconButton

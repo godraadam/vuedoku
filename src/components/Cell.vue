@@ -1,22 +1,22 @@
 <template>
   <div
-    :class="`aspect-square min-w-10 md:min-w-22 p-0.5 lg:p-2 flex group relative items-center justify-center border border-gray-300 group${isAtBottomEdge ? ' border-b-gray-700' : ''}${isAtTopEdge ? ' border-t-gray-700' : ''}${isAtLeftEdge ? ' border-l-gray-700' : ''}${isAtRightEdge ? ' border-r-gray-700' : ''}${isFocused ? ' bg-theme-200' : ''}${focusedCellSharedUnitCount == 2 ? ' bg-theme-100' : ''}${focusedCellSharedUnitCount == 1 ? ' bg-theme-50' : ''}`"
+    :class="`group relative flex aspect-square min-w-10 items-center justify-center border border-gray-300 p-0.5 md:min-w-22 lg:p-2 group${isAtBottomEdge ? 'border-b-gray-700' : ''}${isAtTopEdge ? 'border-t-gray-700' : ''}${isAtLeftEdge ? 'border-l-gray-700' : ''}${isAtRightEdge ? 'border-r-gray-700' : ''}${isFocused ? 'bg-theme-200' : ''}${focusedCellSharedUnitCount == 2 ? 'bg-theme-100' : ''}${focusedCellSharedUnitCount == 1 ? 'bg-theme-50' : ''}`"
     @mouseenter="focusedCell = cell"
     @click="focusedCell = cell"
   >
     <div
       v-if="cell.isFilled()"
-      class="z-10 text-2xl md:text-5xl font-semibold h-full w-full flex items-center justify-center"
+      class="z-10 flex h-full w-full items-center justify-center text-2xl font-semibold md:text-5xl"
       :class="cell.isGiven() ? 'text-gray-900' : 'text-theme-600'"
       @dblclick="handleDoubleClick"
     >
       {{ cell.getValue() + 1 }}
       <div
         v-if="isConflicting"
-        class="absolute bottom-2 left-2 bg-red-400 rounded-full size-2 md:size-4"
+        class="absolute bottom-2 left-2 size-2 rounded-full bg-red-400 md:size-4"
       />
     </div>
-    <div v-else class="h-full w-full grid grid-cols-3 grid-rows-3 gap-0.5">
+    <div v-else class="grid h-full w-full grid-cols-3 grid-rows-3 gap-0.5">
       <Candidate
         v-for="candidate of cell.getCandidates()"
         :candidate
@@ -56,6 +56,10 @@ const focusedCellSharedUnitCount = computed(() =>
 );
 
 function handleDoubleClick() {
-  highlightedDigit.value = props.cell.getValue();
+  if (highlightedDigit.value == props.cell.getValue()) {
+    highlightedDigit.value = undefined;
+  } else {
+    highlightedDigit.value = props.cell.getValue();
+  }
 }
 </script>

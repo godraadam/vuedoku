@@ -1,7 +1,7 @@
 <template>
   <svg
     v-if="fromRect && toRect"
-    class="absolute top-0 left-0 w-full h-full pointer-events-none z-0"
+    class="pointer-events-none absolute top-0 left-0 z-0 h-full w-full"
   >
     <path
       :d="path"

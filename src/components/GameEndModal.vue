@@ -1,8 +1,8 @@
 <template>
-  <Modal :is-open class="w-full max-w-lg mx-2" @close="emits('close')">
+  <Modal :is-open class="mx-2 w-full max-w-lg" @close="emits('close')">
     <div class="h-fit overflow-visible">
-      <h1 class="text-3xl font-medium pb-4">Congratulations!</h1>
-      <p class="text-gray-900 pb-5">
+      <h1 class="pb-4 text-3xl font-medium">Congratulations!</h1>
+      <p class="pb-5 text-gray-900">
         You solved a{{ difficulty == "easy" ? "n " : " " }}
         <span class="text-theme-600">{{ difficulty }}</span> sudoku in
         <span class="text-theme-600">{{ time }}</span>
@@ -11,26 +11,26 @@
       <div class="flex items-center justify-between gap-2 pt-10">
         <RouterLink
           to="/"
-          class="text-center text-theme-600 py-2 cursor-pointer hover:text-theme-700 transition-colors"
+          class="text-theme-600 hover:text-theme-700 cursor-pointer py-2 text-center transition-colors"
         >
           Exit
         </RouterLink>
         <div class="flex gap-2">
           <button
-            class="border border-theme-600 md:min-w-32 flex justify-center items-center gap-2 text-theme-600 px-3 py-2 rounded-lg cursor-pointer hover:bg-theme-50 transition-colors"
+            class="border-theme-600 text-theme-600 hover:bg-theme-50 flex cursor-pointer items-center justify-center gap-2 rounded-lg border px-3 py-2 transition-colors md:min-w-32"
             @click="onShare"
           >
             {{ linkCopied ? "Link copied!" : "Share" }}
-            <CopiedIcon v-if="linkCopied" class="size-5 text-theme-600" />
-            <ShareIcon v-else class="size-5 text-theme-600" />
+            <CopiedIcon v-if="linkCopied" class="text-theme-600 size-5" />
+            <ShareIcon v-else class="text-theme-600 size-5" />
           </button>
           <button
             v-if="difficulty != 'custom'"
-            class="bg-theme-600 md:min-w-32 flex justify-center items-center gap-2 text-white px-3 py-2 rounded-lg cursor-pointer hover:bg-theme-500 transition-colors"
+            class="bg-theme-600 hover:bg-theme-500 flex cursor-pointer items-center justify-center gap-2 rounded-lg px-3 py-2 text-white transition-colors md:min-w-32"
             @click="onPlayAnother"
           >
             Play another
-            <PlayIcon class="text-white size-5" />
+            <PlayIcon class="size-5 text-white" />
           </button>
         </div>
       </div>

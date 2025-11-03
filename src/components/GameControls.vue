@@ -1,7 +1,7 @@
 <template>
-  <div class="text-gray-900 font-medium flex md:gap-4 min-h-6 w-full justify-between items-center">
+  <div class="flex min-h-6 w-full items-center justify-between font-medium text-gray-900 md:gap-4">
     <IconButton class="pl-0" @click="onExit"><ChevronLeftIcon class="size-5" />Back</IconButton>
-    <div v-if="showHint" class="font-light text-sm hidden max-w-[300px] md:flex items-center gap-1">
+    <div v-if="showHint" class="hidden max-w-[300px] items-center gap-1 text-sm font-light md:flex">
       {{ nextStep ? nextStep.reporter.getName() : isSolved ? "Solved" : "Stuck" }}
       <a v-if="nextStep?.reporter.getLink()" :href="nextStep?.reporter.getLink()" target="_blank"
         ><IconButton><InfoIcon class="size-4" /> </IconButton
@@ -13,28 +13,28 @@
       </div>
 
       <Tooltip delay="1000">
-        <IconButton class="font-light w-24" :disabled="isSolved" @click="onTogglePause"
+        <IconButton class="w-24 font-light" :disabled="isSolved" @click="onTogglePause"
           >{{ time }}<PlayIcon v-if="!running" class="size-5" /><PauseIcon v-else class="size-5"
         /></IconButton>
         <template #popper
           >{{ running ? "Pause Game" : "Resume Game" }}
-          <span class="text-sm font-mono text-gray-400"> [Spacebar]</span></template
+          <span class="font-mono text-sm text-gray-400"> [Spacebar]</span></template
         >
       </Tooltip>
       <Tooltip delay="1000">
         <IconButton @click="reset"><ResetIcon class="size-5" /> </IconButton>
         <template #popper
-          >Reset puzzle <span class="text-sm font-mono text-gray-400">[Cmd+R]</span></template
+          >Reset puzzle <span class="font-mono text-sm text-gray-400">[Cmd+R]</span></template
         >
       </Tooltip>
       <Tooltip delay="1000">
         <IconButton @click="onToggleLike">
-          <HeartFilledIcon v-if="isLiked" class="size-5 text-theme-500" />
+          <HeartFilledIcon v-if="isLiked" class="text-theme-500 size-5" />
           <HeartOutlineIcon v-else class="size-5" />
         </IconButton>
         <template #popper
           >{{ isLiked ? "Unlike" : "Like" }}
-          <span class="text-sm font-mono text-gray-400"> [Cmd+L]</span></template
+          <span class="font-mono text-sm text-gray-400"> [Cmd+L]</span></template
         >
       </Tooltip>
 
@@ -42,11 +42,11 @@
         <IconButton @click="showHint = true" @dblclick="autoHint = !autoHint"
           ><HintIcon v-if="!showHint" class="size-5" /><HintIconFilled
             v-else
-            class="size-5 text-theme-500"
+            class="text-theme-500 size-5"
           />
         </IconButton>
         <template #popper
-          >Get a hint <span class="text-sm font-mono text-gray-400"> [Cmd+H]</span></template
+          >Get a hint <span class="font-mono text-sm text-gray-400"> [Cmd+H]</span></template
         >
       </Tooltip>
       <!-- Share -->
@@ -58,16 +58,16 @@
             </IconButton>
           </DropDownTrigger>
           <DropDownContent class="w-64">
-            <DropDownItem class="whitespace-nowrap text-sm">
+            <DropDownItem class="text-sm whitespace-nowrap">
               <CopyIcon v-if="!linkCopied" class="size-5 text-gray-900" />
-              <CoypCheckIcon v-else class="size-5 text-theme-600" />
+              <CoypCheckIcon v-else class="text-theme-600 size-5" />
               <button class="w-full text-left" @click="onCopy('original')">
                 Copy link to puzzle
               </button></DropDownItem
             >
-            <DropDownItem class="whitespace-nowrap text-sm w-full"
+            <DropDownItem class="w-full text-sm whitespace-nowrap"
               ><CopyIcon v-if="!currentsStateLinkCopied" class="size-5 text-gray-900" />
-              <CoypCheckIcon v-else class="size-5 text-theme-600" />
+              <CoypCheckIcon v-else class="text-theme-600 size-5" />
               <button class="w-full text-left" @click="onCopy('current')">
                 Copy link to current state
               </button></DropDownItem
@@ -84,66 +84,66 @@
             <IconButton> <SettingsIcon class="size-5" /> </IconButton
           ></DropDownTrigger>
           <DropDownContent class="w-64">
-            <DropDownItem class="whitespace-nowrap text-sm"
-              ><div class="flex gap-2 items-center w-full">
+            <DropDownItem class="text-sm whitespace-nowrap"
+              ><div class="flex w-full items-center gap-2">
                 <input
                   v-model="autoCandidates"
                   type="checkbox"
-                  class="size-4 accent-theme-600 rounded-lg"
+                  class="accent-theme-600 size-4 rounded-lg"
                   id="auto-candidates"
-                /><label for="auto-candidates" class="text-gray-900 text-sm w-full"
+                /><label for="auto-candidates" class="w-full text-sm text-gray-900"
                   >Auto Candidates</label
                 >
               </div></DropDownItem
             >
-            <DropDownItem class="whitespace-nowrap text-sm"
-              ><div class="flex gap-2 items-center w-full">
+            <DropDownItem class="text-sm whitespace-nowrap"
+              ><div class="flex w-full items-center gap-2">
                 <input
                   v-model="autoHint"
                   type="checkbox"
-                  class="size-4 accent-theme-600 rounded-lg"
+                  class="accent-theme-600 size-4 rounded-lg"
                   id="auto-hint"
-                /><label for="auto-hint" class="text-gray-900 text-sm w-full">Auto Hints</label>
+                /><label for="auto-hint" class="w-full text-sm text-gray-900">Auto Hints</label>
               </div></DropDownItem
             >
-            <DropDownItem class="whitespace-nowrap text-sm"
-              ><div class="flex gap-2 items-center w-full">
+            <DropDownItem class="text-sm whitespace-nowrap"
+              ><div class="flex w-full items-center gap-2">
                 <input
                   v-model="autoHighlight"
                   type="checkbox"
-                  class="size-4 accent-theme-600 rounded-lg"
+                  class="accent-theme-600 size-4 rounded-lg"
                   id="auto-highlight"
-                /><label for="auto-highlight" class="text-gray-900 text-sm w-full"
+                /><label for="auto-highlight" class="w-full text-sm text-gray-900"
                   >Auto Highlight</label
                 >
               </div></DropDownItem
             >
-            <DropDownItem class="whitespace-nowrap text-sm"
-              ><div class="flex gap-2 items-center w-full">
+            <DropDownItem class="text-sm whitespace-nowrap"
+              ><div class="flex w-full items-center gap-2">
                 <input
                   v-model="showGraph"
                   type="checkbox"
-                  class="size-4 accent-theme-600 rounded-lg"
+                  class="accent-theme-600 size-4 rounded-lg"
                   id="show-graph"
-                /><label for="show-graph" class="text-gray-900 text-sm w-full"
+                /><label for="show-graph" class="w-full text-sm text-gray-900"
                   >Show Inference Graph</label
                 >
               </div></DropDownItem
             >
-            <DropDownItem class="whitespace-nowrap text-sm"
-              ><div class="flex gap-2 items-center w-full">
+            <DropDownItem class="text-sm whitespace-nowrap"
+              ><div class="flex w-full items-center gap-2">
                 <input
                   v-model="debugMode"
                   type="checkbox"
-                  class="size-4 accent-theme-600 rounded-lg"
+                  class="accent-theme-600 size-4 rounded-lg"
                   id="debug-mode"
-                /><label for="debug-mode" class="text-gray-900 text-sm w-full">Debug Mode</label>
+                /><label for="debug-mode" class="w-full text-sm text-gray-900">Debug Mode</label>
               </div></DropDownItem
             >
           </DropDownContent>
         </DropDownContext>
         <template #popper
-          >Open Settings <span class="text-sm font-mono text-gray-400"> [Cmd+,]</span></template
+          >Open Settings <span class="font-mono text-sm text-gray-400"> [Cmd+,]</span></template
         >
       </Tooltip>
     </div>
