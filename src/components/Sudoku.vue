@@ -79,7 +79,7 @@ useKeyboardEvent(
       const candidate = focusedCell.value.getCandidate(Number(e.code.replace("Digit", "")) - 1);
       const state = autoCandidates.value
         ? !candidate.isSet()
-        : !sudoku.value.getUserSetCandidates().get(candidate);
+        : !sudoku.value.getUserSetCandidates().get(candidate.getCandidateIdx());
       return sudoku.value.setCandidate(candidate, state, true, true);
     }
     if (["1", "2", "3", "4", "5", "6", "7", "8", "9"].includes(e.key)) {

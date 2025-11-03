@@ -44,8 +44,9 @@ const isHighLighted = computed(
   () =>
     !canBePlaced.value &&
     !canBeRemoved.value &&
-    (props.candidate.isSet() ||
-      sudoku.value.getUserSetCandidates().get(props.candidate.getCandidateIdx())) &&
+    (autoCandidates
+      ? props.candidate.isSet()
+      : sudoku.value.getUserSetCandidates().get(props.candidate.getCandidateIdx())) &&
     highlightedDigit.value == props.candidate.getDigit(),
 );
 
