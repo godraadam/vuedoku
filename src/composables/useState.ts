@@ -68,13 +68,11 @@ function useState() {
   }
 
   watch(values, reset);
-  watch(nextStep, (_, prev) => {
-    if (prev != undefined) {
-      if (!autoHint.value) {
-        showHint.value = false;
-      } else {
-        hintsUsed.value += 1;
-      }
+  watch(nextStep, () => {
+    if (!autoHint.value) {
+      showHint.value = false;
+    } else {
+      hintsUsed.value += 1;
     }
   });
 
