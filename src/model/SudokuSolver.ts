@@ -9,25 +9,24 @@ import { CPRResolver } from "@/model/strategies/ChuteRemotePair";
 import { Wing } from "@/model/strategies/Wing";
 import { XYChainResolver } from "@/model/strategies/XYChain";
 import { AIC } from "@/model/strategies/AIC";
-import { DoubleClaimResolver } from "@/model/strategies/DoubleClaim";
 import { XChainResolver } from "@/model/strategies/XChain";
-import type { Step } from "@/types";
 import { XCycleResolver } from "@/model/strategies/XCycle";
 import { XYCycleResolver } from "@/model/strategies/XYCycle";
 import { DiscontinousXCycle2 } from "@/model/strategies/DiscontinuousXCycle2";
 import { DiscontinousXCycle1 } from "@/model/strategies/DiscontinuousXCycle1";
 import { DiscontinousXYCycle1 } from "@/model/strategies/DiscontinuousXYCycle1";
 import { DiscontinousXYCycle2 } from "@/model/strategies/DiscontinuousXYCyle2";
+import type { Step } from "@/types";
 
 export class SudokuSolver {
   private sudoku: Sudoku;
 
-  private resolvers: Array<AbstractStrategy>;
+  private strategies: Array<AbstractStrategy>;
 
   constructor(sudoku: Sudoku) {
     this.sudoku = sudoku;
     // order matters
-    this.resolvers = [
+    this.strategies = [
       new NakedTupleResolver(this.sudoku, 1),
       new HiddenTupleResolver(this.sudoku, 1),
       new NakedTupleResolver(this.sudoku, 2),
@@ -36,7 +35,6 @@ export class SudokuSolver {
       new ClaimingCandidates(this.sudoku),
       new NakedTupleResolver(this.sudoku, 3),
       new HiddenTupleResolver(this.sudoku, 3),
-      new DoubleClaimResolver(this.sudoku),
       new NakedTupleResolver(this.sudoku, 4),
       new HiddenTupleResolver(this.sudoku, 4),
       new CPRResolver(this.sudoku),
@@ -115,8 +113,8 @@ export class SudokuSolver {
   }
 
   public getNextStep() {
-    for (const resolver of this.resolvers) {
-      const res = resolver.resolve();
+    for (const strategy of this.strategies) {
+      const res = strategy.resolve();
       if (res) {
         return res;
       }

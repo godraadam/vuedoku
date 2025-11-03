@@ -13,7 +13,7 @@ export default class Sudoku {
   private _boxes: Array<SudokuUnit> = [];
   private _xchutes: Array<SudokuUnit> = [];
   private _ychutes: Array<SudokuUnit> = [];
-  private userSetCandidatesCache = new Map<Candidate, boolean>();
+  private userSetCandidatesCache = new Map<number, boolean>();
   private inferenceGraph: InferenceGraph;
   private placedValueCounts = Array(9).fill(0);
 
@@ -169,7 +169,10 @@ export default class Sudoku {
 
     const seenSetCandidates = this.getCellsSeenBy(cell)
       .map((cell) => cell.getCandidate(digit))
-      .filter((candidate) => candidate.isSet());
+      .filter(
+        (candidate) =>
+          candidate.isSet() || this.userSetCandidatesCache.get(candidate.getCandidateIdx()),
+      );
 
     seenSetCandidates.forEach((candidate) => this.setCandidate(candidate, false));
     if (updateInferenceGraph) {
@@ -196,7 +199,9 @@ export default class Sudoku {
 
     const candidatesToReset: Array<Candidate> = [];
     candidatesToReset.push(
-      ...seenCandidates.filter((candidate) => this.userSetCandidatesCache.get(candidate) != false),
+      ...seenCandidates.filter(
+        (candidate) => this.userSetCandidatesCache.get(candidate.getCandidateIdx()) != false,
+      ),
     );
     candidatesToReset.push(...candidatesInCell);
     candidatesToReset.forEach((candidate) => this.setCandidate(candidate, true));
@@ -220,8 +225,8 @@ export default class Sudoku {
         return;
       }
     }
-    if (userInput) {
-      this.userSetCandidatesCache.set(candidate, isSet);
+    if (userInput || this.userSetCandidatesCache.get(candidate.getCandidateIdx()) != undefined) {
+      this.userSetCandidatesCache.set(candidate.getCandidateIdx(), isSet);
     }
     candidate.setState(isSet);
     if (rebuildGraph && !(userInput && isSet)) {

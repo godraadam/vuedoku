@@ -66,7 +66,7 @@ function onMobileInput(type: "remove" | "place" | "eliminate", digit: number) {
     const candidate = focusedCell.value.getCandidate(digit);
     const state = autoCandidates.value
       ? !candidate.isSet()
-      : !sudoku.value.getUserSetCandidates().get(candidate);
+      : !sudoku.value.getUserSetCandidates().get(candidate.getCandidateIdx());
     return sudoku.value.setCandidate(candidate, state, true, true);
   } else if (type == "place") {
     sudoku.value.placeValueInCell(focusedCell.value.getCellIdx(), digit);
