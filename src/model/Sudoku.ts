@@ -160,6 +160,9 @@ export default class Sudoku {
     if (cell.isGiven()) {
       return;
     }
+    if (cell.isFilled()) {
+      this.removeValueFromCell(cell.getCellIdx());
+    }
     // place value in cell
     cell.setValue(digit, isGiven);
     cell.getSetCandidates().forEach((cand) => this.setCandidate(cand, false));
