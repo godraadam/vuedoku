@@ -1,20 +1,9 @@
 <template>
-  <Transition
-    enter-from-class="opacity-0 scale-[95%]"
-    enter-to-class="opacity-100 scale-100"
-    enter-active-class="transition-opacity duration-100"
-    leave-from-class="opacity-100 scale-100"
-    leave-active-class="transition-opacity duration-100"
-    leave-to-class="opacity-0 scale-[95%]"
-  >
+  <Transition enter-from-class="opacity-0 scale-[95%]" enter-to-class="opacity-100 scale-100"
+    enter-active-class="transition-opacity duration-100" leave-from-class="opacity-100 scale-100"
+    leave-active-class="transition-opacity duration-100" leave-to-class="opacity-0 scale-[95%]">
     <template v-if="isOpen">
-      <ul
-        :id="`select-${id}`"
-        ref="target"
-        role="listbox"
-        :class="dropdownClass"
-        @focusout="setOpen(false)"
-      >
+      <ul :id="`select-${id}`" ref="target" role="listbox" :class="dropdownClass" @focusout="setOpen(false)">
         <slot />
       </ul>
     </template>
@@ -22,7 +11,6 @@
 </template>
 
 <script setup lang="ts" generic="T">
-import { onClickOutside } from "@vueuse/core";
 import type { Ref } from "vue";
 import { computed, inject, useAttrs, useTemplateRef } from "vue";
 
@@ -48,6 +36,4 @@ const dropdownClass = computed(() =>
 );
 
 const target = useTemplateRef<HTMLElement>("target");
-
-onClickOutside(target, () => setOpen(false));
 </script>

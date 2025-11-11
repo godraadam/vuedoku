@@ -1,10 +1,10 @@
 import { AbstractStrategy } from "@/model/strategies/AbstractStrategy";
 import type Sudoku from "@/model/Sudoku";
 import type { Step } from "@/types";
-import { digits, kCombinations } from "@/util";
+import { digits, kCombinations, subsets } from "@/util";
 
 // WIP
-export class FinnedFishResolver extends AbstractStrategy {
+export class FinnedFish extends AbstractStrategy {
   private order: number;
 
   constructor(sudoku: Sudoku, order: number) {
@@ -18,47 +18,92 @@ export class FinnedFishResolver extends AbstractStrategy {
     for (const unitType of unitTypes) {
       // for each digit
       for (const digit of digits()) {
-        // for all n tuple of rows/columns
-        const units = this.sudoku.getUnits(unitType);
-        for (const unitKTuple of kCombinations(units, this.order)) {
-          const unitToCellsWithCandidate = unitKTuple.map((_unit) =>
-            _unit.getCellsWithCandidate(digit),
+        // for all n-tuples of rows/columns with at most <order> + 2 occurences of <digit> as candidate
+        const units = this.sudoku
+          .getUnits(unitType)
+          .filter(
+            (unit) =>
+              unit.getCountOfCandidate(digit) <= this.order + 2 &&
+              unit.getCountOfCandidate(digit) > 1,
           );
-          // we allow more than <order> nr of candidates in a unit, these will be our fins
-          if (unitToCellsWithCandidate.some((cells) => cells.length < 1)) {
+
+        for (const unitKTuple of kCombinations(units, this.order)) {
+          const finnedUnits = unitKTuple.filter(
+            (unit) => unit.getCountOfCandidate(digit) > this.order,
+          );
+          // if more than 1 row/column contains more candidate cells then <order>, skip
+          if (finnedUnits.length > 1) {
             continue;
           }
-          // but how??
-          const diagonalUnitType = unitType == "row" ? "col" : "row";
-          const diagonalUnitIdxSet = unitToCellsWithCandidate
-            .map((cells) => cells.map((cell) => cell.getUnitIdx(diagonalUnitType)))
-            .flat()
-            .reduce((set, idx) => set.add(idx), new Set<number>());
 
-          // we need to check fins are located within one box
-          if (diagonalUnitIdxSet.size == this.order) {
-            // check if there is anything to remove
-            const diagonalUnits = Array.from(diagonalUnitIdxSet).map((idx) =>
-              this.sudoku.getUnit(diagonalUnitType, idx),
-            );
-            const candidates = diagonalUnits
-              .map((unit) =>
-                unit
-                  .getCells()
-                  .filter(
-                    (cell) =>
-                      !unitKTuple
-                        .map((unit) => unit.getIdx())
-                        .includes(cell.getUnitIdx(unitType)) && cell.hasCandidate(digit),
-                  ),
-              )
-              .flat()
-              .map((cell) => cell.getSetCandidates().filter((cand) => cand.getDigit() == digit))
-              .flat();
-            if (candidates.length > 0) {
+          // for order > 2 we don't know which unit is finned
+          // nominate each as finned unit and test
+          for (const maybeFinnedUnit of unitKTuple) {
+            // try each subset of candidate finned unit's cells
+            const candidateCells = maybeFinnedUnit.getCellsWithCandidate(digit);
+            for (const fishCells of subsets(candidateCells, this.order)) {
+              const finCells = candidateCells.filter((cell) => !fishCells.includes(cell));
+
+              // try to make a proper fish with selected cells
+
+              const unitToCellsWithCandidate = unitKTuple.map((_unit) =>
+                _unit.getIdx() == maybeFinnedUnit.getIdx()
+                  ? fishCells
+                  : _unit.getCellsWithCandidate(digit),
+              );
+              const diagonalUnitType = unitType == "row" ? "col" : "row";
+              const diagonalUnitIdxSet = unitToCellsWithCandidate
+                .map((cells) => cells.map((cell) => cell.getUnitIdx(diagonalUnitType)))
+                .flat()
+                .reduce((set, idx) => set.add(idx), new Set<number>());
+
+              if (diagonalUnitIdxSet.size != this.order) {
+                continue;
+              }
+
+              // check that fin cells are valid
+              const finCellsBoxIds = Array.from(
+                finCells.reduce(
+                  (boxIdSet, cell) => boxIdSet.add(cell.getBoxIdx()),
+                  new Set<number>(),
+                ),
+              );
+
+              if (
+                finCellsBoxIds.length > 1 ||
+                candidateCells.every((cell) => cell.getBoxIdx() != finCellsBoxIds[0])
+              ) {
+                continue;
+              }
+
+              const diagonalUnits = Array.from(diagonalUnitIdxSet).map((idx) =>
+                this.sudoku.getUnit(diagonalUnitType, idx),
+              );
+              const candidates = diagonalUnits
+                .map((unit) =>
+                  unit
+                    .getCells()
+                    .filter(
+                      (cell) =>
+                        cell.getBoxIdx() == finCellsBoxIds[0] &&
+                        !unitKTuple
+                          .map((unit) => unit.getIdx())
+                          .includes(cell.getUnitIdx(unitType)) &&
+                        cell.hasCandidate(digit),
+                    ),
+                )
+                .flat()
+                .map((cell) => cell.getCandidate(digit));
+
+              // check there is anything to remove
+              if (candidates.length < 1) {
+                continue;
+              }
+
               const participants = unitToCellsWithCandidate
                 .map((unit) => unit.map((cell) => cell.getCandidate(digit)))
-                .flat();
+                .flat()
+                .concat(finCells.map((cell) => cell.getCandidate(digit)));
               return {
                 reporter: this,
                 type: "eliminate",
@@ -78,7 +123,7 @@ export class FinnedFishResolver extends AbstractStrategy {
     return undefined;
   }
 
-  public getName(): string {
+  public getName() {
     const nameMap = {
       2: "Finned X-Wing",
       3: "Finned Swordfish",
@@ -96,7 +141,15 @@ export class FinnedFishResolver extends AbstractStrategy {
     return 8;
   }
 
-  public getLink(): string | undefined {
-    return undefined;
+  public getLink() {
+    if (this.order == 2) {
+      return "https://www.taupierbw.be/SudokuCoach/SC_FinnedXWing.shtml";
+    }
+    if (this.order == 3) {
+      return "https://www.taupierbw.be/SudokuCoach/SC_FinnedSwordfish.shtml";
+    }
+    if (this.order == 4) {
+      return "https://www.taupierbw.be/SudokuCoach/SC_FinnedJellyfish.shtml";
+    }
   }
 }

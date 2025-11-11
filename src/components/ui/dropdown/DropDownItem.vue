@@ -7,7 +7,7 @@
         $attrs.class ?? '',
       )
     "
-    @click="onSelect"
+    @click.stop="onSelect"
   >
     <slot />
   </li>

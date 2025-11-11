@@ -106,3 +106,13 @@ export async function getRandomSudoku(difficulty: Difficulty) {
   const randomId = Math.floor(Math.random() * 10000);
   return data[randomId];
 }
+
+export function* subsets<T>(arr: Array<T>, k: number): Generator<Array<T>> {
+  if (k < 1) {
+    yield [];
+    return;
+  }
+  for (let i = 1; i < k; i++) {
+    yield* kCombinations(arr, i);
+  }
+}

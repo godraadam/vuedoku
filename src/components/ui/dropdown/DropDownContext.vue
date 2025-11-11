@@ -1,4 +1,5 @@
 <template>
+  <div v-if="isOpen" class="size-screen z-10 absolute inset-0" @click="isOpen = false"></div>
   <div ref="contextRef" :class="cn('relative', $attrs.class ?? '')">
     <slot />
   </div>

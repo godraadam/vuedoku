@@ -2,11 +2,12 @@ import Sudoku from "@/model/Sudoku";
 import { AbstractStrategy } from "@/model/strategies/AbstractStrategy";
 import { HiddenTupleResolver } from "@/model/strategies/HiddenTuples";
 import { NakedTupleResolver } from "@/model/strategies/NakedTuples";
-import { FishResolver } from "@/model/strategies/Fish";
+import { Fish } from "@/model/strategies/Fish";
+import { Wing } from "@/model/strategies/Wing";
+import { FinnedFish } from "@/model/strategies/FinnedFish";
 import { PointingCandidates } from "@/model/strategies/PointingCandidates";
 import { ClaimingCandidates } from "@/model/strategies/ClaimingCandidates";
 import { CPRResolver } from "@/model/strategies/ChuteRemotePair";
-import { Wing } from "@/model/strategies/Wing";
 import { XYChainResolver } from "@/model/strategies/XYChain";
 import { AIC } from "@/model/strategies/AIC";
 import { XChainResolver } from "@/model/strategies/XChain";
@@ -38,13 +39,16 @@ export class SudokuSolver {
       new NakedTupleResolver(this.sudoku, 4),
       new HiddenTupleResolver(this.sudoku, 4),
       new CPRResolver(this.sudoku),
-      new FishResolver(this.sudoku, 2),
+      new Fish(this.sudoku, 2),
       new Wing(this.sudoku, 3),
-      new FishResolver(this.sudoku, 3),
+      new FinnedFish(this.sudoku, 2),
+      new Fish(this.sudoku, 3),
       new Wing(this.sudoku, 4),
-      new FishResolver(this.sudoku, 4),
+      new FinnedFish(this.sudoku, 3),
+      new Fish(this.sudoku, 4),
       new Wing(this.sudoku, 5),
-      new FishResolver(this.sudoku, 5),
+      new FinnedFish(this.sudoku, 4),
+      new Fish(this.sudoku, 5),
 
       // nice loops with single digit -> nice loops with single digit variance
       // -> single digit chains -> chains with one digit variance - of increasing lengths

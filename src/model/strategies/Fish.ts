@@ -3,7 +3,7 @@ import type Sudoku from "@/model/Sudoku";
 import type { Step } from "@/types";
 import { digits, kCombinations } from "@/util";
 
-export class FishResolver extends AbstractStrategy {
+export class Fish extends AbstractStrategy {
   private order: number;
 
   constructor(sudoku: Sudoku, order: number) {
@@ -17,17 +17,12 @@ export class FishResolver extends AbstractStrategy {
     for (const unitType of unitTypes) {
       // for each digit
       for (const digit of digits()) {
-        // for all n tuple of rows/columns
-        const units = this.sudoku.getUnits(unitType);
+        // for all n tuple of rows/columns containing at most <order> number of candidates of <digit>
+        const units = this.sudoku.getUnits(unitType).filter(unit => unit.getCountOfCandidate(digit) <= this.order && unit.getCountOfCandidate(digit) > 1);
         for (const unitKTuple of kCombinations(units, this.order)) {
           const unitToCellsWithCandidate = unitKTuple.map((_unit) =>
             _unit.getCellsWithCandidate(digit),
           );
-          if (
-            unitToCellsWithCandidate.some((cells) => cells.length > this.order || cells.length < 1)
-          ) {
-            continue;
-          }
           const diagonalUnitType = unitType == "row" ? "col" : "row";
           const diagonalUnitIdxSet = unitToCellsWithCandidate
             .map((cells) => cells.map((cell) => cell.getUnitIdx(diagonalUnitType)))
@@ -89,7 +84,7 @@ export class FishResolver extends AbstractStrategy {
     return 7;
   }
 
-  public getLink(): string | undefined {
+  public getLink() {
     if (this.order == 2) {
       return "https://www.taupierbw.be/SudokuCoach/SC_XWing.shtml";
     }

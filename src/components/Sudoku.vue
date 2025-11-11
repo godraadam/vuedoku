@@ -10,7 +10,7 @@
     <div
       v-for="i of cells.length"
       :key="i"
-      class="aspect-square min-w-10 border border-transparent p-0.5 data-[bottom=true]:border-b-gray-500 data-[left=true]:border-l-gray-500 data-[right=true]:border-r-gray-500 data-[top=true]:border-t-gray-500 md:min-w-22 lg:p-2"
+      class="size-10 border border-transparent p-0.5 data-[bottom=true]:border-b-gray-500 data-[left=true]:border-l-gray-500 data-[right=true]:border-r-gray-500 data-[top=true]:border-t-gray-500 md:size-20  lg:p-2"
       :data-top="Math.floor((i - 1) / 9) == 0"
       :data-left="Math.floor((i - 1) % 9) == 0"
       :data-bottom="Math.floor((i - 1) / 9) == 8"

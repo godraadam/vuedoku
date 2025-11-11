@@ -12,7 +12,7 @@ describe.concurrent.skip(
   () => {
     test.each(easySudokus.slice(0, 1000))("solves puzzle %s", (input) => {
       const values = input.split("").map((d) => Number(d) - 1);
-      const sudoku = new Sudoku(values, { autoCandidate: true });
+      const sudoku = new Sudoku(values);
       const sudokuSolver = new SudokuSolver(sudoku);
       sudokuSolver.solve();
 
@@ -28,7 +28,7 @@ describe.concurrent.skip(
   () => {
     test.each(mediumSudokus.slice(0, 1000))("solves puzzle %s", (input) => {
       const values = input.split("").map((d) => Number(d) - 1);
-      const sudoku = new Sudoku(values, { autoCandidate: true });
+      const sudoku = new Sudoku(values);
       const sudokuSolver = new SudokuSolver(sudoku);
       sudokuSolver.solve();
 
@@ -39,12 +39,12 @@ describe.concurrent.skip(
   15000,
 );
 
-describe.concurrent(
+describe.concurrent.skip(
   "Solves hard sudokus",
   () => {
     test.each(hardSudokus.slice(0, 5000))("solves puzzle %s", (input) => {
       const values = input.split("").map((d) => Number(d) - 1);
-      const sudoku = new Sudoku(values, { autoCandidate: true });
+      const sudoku = new Sudoku(values);
       const sudokuSolver = new SudokuSolver(sudoku);
       sudokuSolver.solve();
 
@@ -55,12 +55,12 @@ describe.concurrent(
   1000 * 60 * 5,
 );
 
-describe.concurrent.skip(
+describe.concurrent(
   "Solves diabolical sudokus",
   () => {
-    test.each(diabolicalSudokus.slice(0, 200))("solves puzzle %s", (input) => {
+    test.each(diabolicalSudokus.slice(0, 500))("solves puzzle %s", (input) => {
       const values = input.split("").map((d) => Number(d) - 1);
-      const sudoku = new Sudoku(values, { autoCandidate: true });
+      const sudoku = new Sudoku(values);
       const sudokuSolver = new SudokuSolver(sudoku);
       sudokuSolver.solve();
 
