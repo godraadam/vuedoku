@@ -58,7 +58,7 @@ describe.concurrent.skip(
 describe.concurrent(
   "Solves diabolical sudokus",
   () => {
-    test.each(diabolicalSudokus.slice(0, 500))("solves puzzle %s", (input) => {
+    test.each(diabolicalSudokus.slice(0, 1000))("solves puzzle %s", (input) => {
       const values = input.split("").map((d) => Number(d) - 1);
       const sudoku = new Sudoku(values);
       const sudokuSolver = new SudokuSolver(sudoku);

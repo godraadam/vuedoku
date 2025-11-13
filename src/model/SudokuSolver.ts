@@ -29,7 +29,6 @@ export class SudokuSolver {
     this.sudoku = sudoku;
     // order matters
     this.strategies = [
-      new BUG(this.sudoku),
       new NakedTupleResolver(this.sudoku, 1),
       new HiddenTupleResolver(this.sudoku, 1),
       new NakedTupleResolver(this.sudoku, 2),
@@ -40,6 +39,7 @@ export class SudokuSolver {
       new HiddenTupleResolver(this.sudoku, 3),
       new NakedTupleResolver(this.sudoku, 4),
       new HiddenTupleResolver(this.sudoku, 4),
+      new BUG(this.sudoku),
       new CPRResolver(this.sudoku),
       new Fish(this.sudoku, 2),
       new Wing(this.sudoku, 3),

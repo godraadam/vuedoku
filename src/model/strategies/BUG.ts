@@ -22,7 +22,6 @@ export class BUG extends AbstractStrategy {
         }
       }
     }
-    console.log(bugCell);
     if (!bugCell) {
       return undefined;
     }

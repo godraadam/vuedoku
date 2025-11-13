@@ -15,8 +15,8 @@ Currently implemented solving strategies
 - [x] X-Chain, X-Cycle, Discontinuous X-Cycle
 - [x] XY-Chain, XY-Cycle, Discontinuous XY-Cycle
 - [x] AIC, AIC cycles
-- [ ] BUG
+- [x] BUG
 - [ ] Grouped AIC
 - [ ] ALS AIC
 
-This solved 100% of easy sudokus, 100% of medium sudokus, 95.5% of hard sudokus and 65% of diabolical sudokus.
+This solved 100% of easy sudokus, 100% of medium sudokus, 95.5% of hard sudokus and 67% of diabolical sudokus.
