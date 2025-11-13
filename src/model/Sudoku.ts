@@ -416,4 +416,8 @@ export default class Sudoku {
       yield i;
     }
   }
+
+  public isDigitCompleted(digit: number) {
+    return this.placedValueCounts[digit] >= 9;
+  }
 }
