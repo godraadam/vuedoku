@@ -17,6 +17,7 @@ import { DiscontinousXCycle2 } from "@/model/strategies/DiscontinuousXCycle2";
 import { DiscontinousXCycle1 } from "@/model/strategies/DiscontinuousXCycle1";
 import { DiscontinousXYCycle1 } from "@/model/strategies/DiscontinuousXYCycle1";
 import { DiscontinousXYCycle2 } from "@/model/strategies/DiscontinuousXYCyle2";
+import { BUG } from "@/model/strategies/BUG";
 import type { Step } from "@/types";
 
 export class SudokuSolver {
@@ -28,6 +29,7 @@ export class SudokuSolver {
     this.sudoku = sudoku;
     // order matters
     this.strategies = [
+      new BUG(this.sudoku),
       new NakedTupleResolver(this.sudoku, 1),
       new HiddenTupleResolver(this.sudoku, 1),
       new NakedTupleResolver(this.sudoku, 2),

@@ -103,6 +103,12 @@ export default class Sudoku {
     return this.unitsMap[unit];
   }
 
+  public *cells() {
+    for (let i = 0; i < 81; i++) {
+      yield this.getCellByIdx(i);
+    }
+  }
+
   public *rows() {
     for (let i = 0; i < 9; i++) {
       yield this.getRow(i);
