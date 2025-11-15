@@ -1,36 +1,23 @@
 <template>
   <div id="mobile-keyboard-wrapper" class="mt-2 h-fit space-y-1.5">
     <div class="flex gap-2">
-      <button
-        class="data-[mode=normal]:text-theme-600 font-medium text-gray-900"
-        :data-mode="mode"
-        @click="mode = 'normal'"
-      >
+      <button class="data-[mode=normal]:text-theme-600 font-medium text-gray-900" :data-mode="mode"
+        @click="mode = 'normal'">
         Normal
       </button>
-      <button
-        class="data-[mode=candidate]:text-theme-600 font-medium text-gray-900"
-        :data-mode="mode"
-        @click="mode = 'candidate'"
-      >
+      <button class="data-[mode=candidate]:text-theme-600 font-medium text-gray-900" :data-mode="mode"
+        @click="mode = 'candidate'">
         Candidate
       </button>
     </div>
     <div class="grid w-full grid-cols-5 grid-rows-2 gap-1.5">
-      <button
-        v-for="i in 9"
-        :data-mode="mode"
-        :key="i"
-        :disabled="isDigitCompleted(i)"
+      <button v-for="i in 9" :data-mode="mode" :key="i - 1" :disabled="isDigitCompleted(i)"
         class="active:bg-theme-200 flex h-12 w-full items-center justify-center border-2 border-gray-300 text-2xl text-gray-900 transition-colors duration-100 ease-in disabled:pointer-events-none disabled:opacity-50 data-[mode=candidate]:text-sm"
-        @click="handleClick(i)"
-      >
+        @click="handleClick(i)">
         {{ i }}
       </button>
-      <button
-        class="flex h-12 w-full items-center justify-center border-2 border-gray-300 text-2xl text-gray-900"
-        @click="emits('input', 'remove', 0)"
-      >
+      <button class="flex h-12 w-full items-center justify-center border-2 border-gray-300 text-2xl text-gray-900"
+        @click="emits('input', 'remove', 0)">
         X
       </button>
     </div>

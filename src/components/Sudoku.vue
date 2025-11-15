@@ -1,32 +1,21 @@
 <template>
-  <div
-    v-if="running || isSolved"
-    id="sudoku-grid-wrapper"
-    class="grid w-full grid-cols-9 grid-rows-9"
-  >
+  <div v-if="running || isSolved" id="sudoku-grid-wrapper" class="grid w-full grid-cols-9 grid-rows-9">
     <Cell v-for="cell of cells" :key="cell.getCellIdx()" :cell />
   </div>
   <div v-else class="relative grid w-full grid-cols-9 grid-rows-9">
-    <div
-      v-for="i of cells.length"
-      :key="i"
+    <div v-for="i of cells.length" :key="i"
       class="size-10 border border-transparent p-0.5 data-[bottom=true]:border-b-gray-500 data-[left=true]:border-l-gray-500 data-[right=true]:border-r-gray-500 data-[top=true]:border-t-gray-500 md:size-20  lg:p-2"
-      :data-top="Math.floor((i - 1) / 9) == 0"
-      :data-left="Math.floor((i - 1) % 9) == 0"
-      :data-bottom="Math.floor((i - 1) / 9) == 8"
-      :data-right="Math.floor((i - 1) % 9) == 8"
-    />
-    <PauseIcon
-      class="absolute top-1/2 left-1/2 size-32 -translate-x-1/2 -translate-y-1/2 text-gray-900"
-      @click="running = true"
-    />
+      :data-top="Math.floor((i - 1) / 9) == 0" :data-left="Math.floor((i - 1) % 9) == 0"
+      :data-bottom="Math.floor((i - 1) / 9) == 8" :data-right="Math.floor((i - 1) % 9) == 8" />
+    <PauseIcon class="absolute top-1/2 left-1/2 size-32 -translate-x-1/2 -translate-y-1/2 text-gray-900"
+      @click="running = true" />
   </div>
   <Graph />
   <Chain v-if="chain && showHint" :chain="chain" />
 </template>
 
 <script setup lang="ts">
-import { computed, watch } from "vue";
+import { computed, onMounted, onUnmounted, watch } from "vue";
 
 import Cell from "@/components/Cell.vue";
 import { useKeyboardEvent } from "@/composables/useKeyboardEvent";
@@ -60,6 +49,39 @@ watch(focusedCell, () => {
   }
 });
 
+function handleKeyDown(e: KeyboardEvent) {
+  if (e.altKey && [
+    "Digit1",
+    "Digit2",
+    "Digit3",
+    "Digit4",
+    "Digit5",
+    "Digit6",
+    "Digit7",
+    "Digit8",
+    "Digit9",
+  ].includes(e.code)) {
+    e.preventDefault();
+    highlightedDigit.value = Number(e.code.replace("Digit", "")) - 1;
+  }
+}
+
+function handleKeyUp(e: KeyboardEvent) {
+  if (e.altKey || /^[0-9]$/.test(e.key)) {
+    highlightedDigit.value = undefined;
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('keydown', handleKeyDown);
+  window.addEventListener('keyup', handleKeyUp);
+});
+
+onUnmounted(() => {
+  window.addEventListener('keydown', handleKeyDown);
+  window.addEventListener('keyup', handleKeyUp);
+});
+
 useKeyboardEvent(
   (e) => {
     if (
@@ -82,7 +104,7 @@ useKeyboardEvent(
         : !sudoku.value.getUserSetCandidates().get(candidate.getCandidateIdx());
       return sudoku.value.setCandidate(candidate, state, true, true);
     }
-    if (["1", "2", "3", "4", "5", "6", "7", "8", "9"].includes(e.key)) {
+    if (["1", "2", "3", "4", "5", "6", "7", "8", "9"].includes(e.key) && !e.altKey) {
       return sudoku.value.placeValueInCell(focusedCell.value.getCellIdx(), Number(e.key) - 1);
     }
     if (e.key == "Backspace" && !focusedCell.value.isGiven() && focusedCell.value.isFilled()) {

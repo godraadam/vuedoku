@@ -7,7 +7,7 @@
         isOn && 'font-light text-gray-500 group-hover:text-gray-900',
         canBeRemoved && 'crossed',
         canBePlaced && 'bg-theme-600 text-white group-hover:text-white hover:text-white',
-        isHighLighted && 'text-theme-600 font-bold',
+        isHighLighted && 'border',
         isParticipant && 'border',
       )
     "
