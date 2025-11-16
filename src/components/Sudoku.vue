@@ -1,17 +1,30 @@
 <template>
-  <div v-if="running || isSolved" id="sudoku-grid-wrapper" class="grid w-full grid-cols-9 grid-rows-9">
-    <Cell v-for="cell of cells" :key="cell.getCellIdx()" :cell />
+  <div class="flex w-full justify-center">
+    <div
+      v-if="running || isSolved"
+      id="sudoku-grid-wrapper"
+      class="grid w-fit grid-cols-9 grid-rows-9"
+    >
+      <Cell v-for="cell of cells" :key="cell.getCellIdx()" :cell />
+    </div>
+    <div v-else class="relative grid w-full grid-cols-9 grid-rows-9">
+      <div
+        v-for="i of cells.length"
+        :key="i"
+        class="size-10 border border-transparent p-0.5 data-[bottom=true]:border-b-gray-500 data-[left=true]:border-l-gray-500 data-[right=true]:border-r-gray-500 data-[top=true]:border-t-gray-500 md:size-20 lg:p-2"
+        :data-top="Math.floor((i - 1) / 9) == 0"
+        :data-left="Math.floor((i - 1) % 9) == 0"
+        :data-bottom="Math.floor((i - 1) / 9) == 8"
+        :data-right="Math.floor((i - 1) % 9) == 8"
+      />
+      <PauseIcon
+        class="absolute top-1/2 left-1/2 size-32 -translate-x-1/2 -translate-y-1/2 text-gray-900"
+        @click="running = true"
+      />
+    </div>
+    <Graph />
+    <Chain v-if="chain && showHint" :chain="chain" />
   </div>
-  <div v-else class="relative grid w-full grid-cols-9 grid-rows-9">
-    <div v-for="i of cells.length" :key="i"
-      class="size-10 border border-transparent p-0.5 data-[bottom=true]:border-b-gray-500 data-[left=true]:border-l-gray-500 data-[right=true]:border-r-gray-500 data-[top=true]:border-t-gray-500 md:size-20  lg:p-2"
-      :data-top="Math.floor((i - 1) / 9) == 0" :data-left="Math.floor((i - 1) % 9) == 0"
-      :data-bottom="Math.floor((i - 1) / 9) == 8" :data-right="Math.floor((i - 1) % 9) == 8" />
-    <PauseIcon class="absolute top-1/2 left-1/2 size-32 -translate-x-1/2 -translate-y-1/2 text-gray-900"
-      @click="running = true" />
-  </div>
-  <Graph />
-  <Chain v-if="chain && showHint" :chain="chain" />
 </template>
 
 <script setup lang="ts">
@@ -50,17 +63,20 @@ watch(focusedCell, () => {
 });
 
 function handleKeyDown(e: KeyboardEvent) {
-  if (e.altKey && [
-    "Digit1",
-    "Digit2",
-    "Digit3",
-    "Digit4",
-    "Digit5",
-    "Digit6",
-    "Digit7",
-    "Digit8",
-    "Digit9",
-  ].includes(e.code)) {
+  if (
+    e.altKey &&
+    [
+      "Digit1",
+      "Digit2",
+      "Digit3",
+      "Digit4",
+      "Digit5",
+      "Digit6",
+      "Digit7",
+      "Digit8",
+      "Digit9",
+    ].includes(e.code)
+  ) {
     e.preventDefault();
     highlightedDigit.value = Number(e.code.replace("Digit", "")) - 1;
   }
@@ -73,13 +89,13 @@ function handleKeyUp(e: KeyboardEvent) {
 }
 
 onMounted(() => {
-  window.addEventListener('keydown', handleKeyDown);
-  window.addEventListener('keyup', handleKeyUp);
+  window.addEventListener("keydown", handleKeyDown);
+  window.addEventListener("keyup", handleKeyUp);
 });
 
 onUnmounted(() => {
-  window.addEventListener('keydown', handleKeyDown);
-  window.addEventListener('keyup', handleKeyUp);
+  window.addEventListener("keydown", handleKeyDown);
+  window.addEventListener("keyup", handleKeyUp);
 });
 
 useKeyboardEvent(

@@ -1,6 +1,6 @@
 <template>
   <div :class="cn(
-    'group relative flex size-10 items-center justify-center border border-gray-300 p-0.5 md:size-20 lg:p-2',
+    'group relative flex size-11 items-center justify-center border border-gray-300 p-0.5 md:size-20 lg:p-2',
     cellHoverClass,
     borderClass,
   )
