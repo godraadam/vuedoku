@@ -1,18 +1,33 @@
 <template>
-  <div :class="cn(
-    'group relative flex size-11 items-center justify-center border border-gray-300 p-0.5 md:size-20 lg:p-2',
-    cellHoverClass,
-    borderClass,
-  )
-    " @mouseenter="focusedCell = cell" @click="focusedCell = cell">
-    <div v-if="cell.isFilled()"
-      class="font-satoshi z-10 flex h-full w-full items-center justify-center text-2xl font-semibold md:text-5xl"
-      :class="cell.isGiven() ? 'text-gray-900' : 'text-theme-600'" @dblclick="handleDoubleClick">
+  <div
+    :class="
+      cn(
+        'group relative flex size-11 items-center justify-center border border-gray-300 p-0.5 md:size-20 lg:p-2',
+        cellHoverClass,
+        borderClass,
+      )
+    "
+    @mouseenter="focusedCell = cell"
+    @click="focusedCell = cell"
+  >
+    <div
+      v-if="cell.isFilled()"
+      class="noselect font-satoshi z-10 flex h-full w-full items-center justify-center text-2xl font-semibold md:text-5xl"
+      :class="cell.isGiven() ? 'text-gray-900' : 'text-theme-600'"
+      @dblclick="handleDoubleClick"
+    >
       {{ cell.getValue() + 1 }}
-      <div v-if="isConflicting" class="absolute bottom-2 left-2 size-2 rounded-full bg-red-400 md:size-4" />
+      <div
+        v-if="isConflicting"
+        class="absolute bottom-2 left-2 size-2 rounded-full bg-red-400 md:size-4"
+      />
     </div>
     <div v-else class="grid h-full w-full grid-cols-3 grid-rows-3 gap-0.5">
-      <Candidate v-for="candidate of cell.getCandidates()" :candidate :key="candidate.getCandidateIdx()" />
+      <Candidate
+        v-for="candidate of cell.getCandidates()"
+        :candidate
+        :key="candidate.getCandidateIdx()"
+      />
     </div>
   </div>
 </template>
@@ -71,3 +86,14 @@ function handleDoubleClick() {
   }
 }
 </script>
+
+<style>
+.noselect {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+</style>

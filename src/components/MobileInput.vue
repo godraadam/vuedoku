@@ -22,7 +22,7 @@
         :data-mode="mode"
         :key="i - 1"
         :disabled="isDigitCompleted(i)"
-        class="active:bg-theme-200 flex h-12 items-center justify-center border-2 border-gray-300 text-2xl text-gray-900 transition-colors duration-100 ease-in disabled:pointer-events-none disabled:opacity-50 data-[mode=candidate]:text-sm"
+        class="active:bg-theme-200 noselect flex h-12 items-center justify-center border-2 border-gray-300 text-2xl text-gray-900 transition-colors duration-100 ease-in disabled:pointer-events-none disabled:opacity-50 data-[mode=candidate]:text-sm"
         v-on-long-press="(_) => handleLongPress(i)"
         @touchend="handleClick(i)"
         @mouseup="handleClick(i)"
@@ -74,3 +74,14 @@ function isDigitCompleted(digit: number) {
   return sudoku.value.isDigitCompleted(digit - 1);
 }
 </script>
+
+<style>
+.noselect {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+</style>
