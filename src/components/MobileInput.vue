@@ -24,16 +24,15 @@
         :disabled="isDigitCompleted(i)"
         class="active:bg-theme-200 noselect flex h-12 items-center justify-center border-2 border-gray-300 text-2xl text-gray-900 transition-colors duration-100 ease-in disabled:pointer-events-none disabled:opacity-50 data-[mode=candidate]:text-sm"
         v-on-long-press="(_) => handleLongPress(i)"
-        @touchend="handleClick(i)"
-        @mouseup="handleClick(i)"
+        @click="handleClick(i)"
       >
         {{ i }}
       </button>
       <button
-        class="flex h-12 items-center justify-center border-2 border-gray-300 text-2xl text-gray-900"
+        class="noselect flex h-12 items-center justify-center border-2 border-gray-300 text-2xl text-gray-900"
         @click="emits('input', 'remove', 0)"
       >
-        X
+        &times;
       </button>
     </div>
   </div>
